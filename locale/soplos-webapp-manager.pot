@@ -1,0 +1,80 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-04 12:22+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.py:25
+msgid "Starting Soplos WebApp Manager..."
+msgstr ""
+
+#: ui/main_window.py:91
+msgid "Add WebApp"
+msgstr ""
+
+#: ui/main_window.py:98
+msgid "Remove WebApp"
+msgstr ""
+
+#: ui/main_window.py:122
+msgid ""
+"No WebApps installed.\n"
+"Click the '+' button to add one."
+msgstr ""
+
+#: ui/main_window.py:192
+msgid "This will remove its .desktop file and the isolated browser profile."
+msgstr ""
+
+#: ui/dialogs/add_webapp_dialog.py:34
+msgid "e.g. YouTube"
+msgstr ""
+
+#: ui/dialogs/add_webapp_dialog.py:35
+msgid "Name:"
+msgstr ""
+
+#: ui/dialogs/add_webapp_dialog.py:42
+msgid "Web Address:"
+msgstr ""
+
+#: ui/dialogs/add_webapp_dialog.py:47
+msgid "Select Icon"
+msgstr ""
+
+#: ui/dialogs/add_webapp_dialog.py:49
+msgid "Icon:"
+msgstr ""
+
+#: ui/dialogs/add_webapp_dialog.py:59
+msgid "Category:"
+msgstr ""
+
+#: ui/dialogs/add_webapp_dialog.py:69
+msgid "Browser:"
+msgstr ""
+
+#: ui/dialogs/add_webapp_dialog.py:76
+msgid "Navigation Bar:"
+msgstr ""
+
+#: ui/dialogs/add_webapp_dialog.py:97
+msgid "Select an icon"
+msgstr ""
+
+#: ui/dialogs/add_webapp_dialog.py:107
+msgid "Images (PNG, SVG, JPG)"
+msgstr ""

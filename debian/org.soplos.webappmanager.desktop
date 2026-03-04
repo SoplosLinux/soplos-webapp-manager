@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Soplos WebApp Manager
+Comment=Create and manage isolated Web Applications
+Exec=/usr/local/bin/soplos-webapp-manager/main.py
+Icon=applications-internet
+Terminal=false
+Type=Application
+Categories=Settings;System;
+StartupNotify=true
