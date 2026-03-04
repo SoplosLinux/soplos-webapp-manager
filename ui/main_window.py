@@ -1,7 +1,8 @@
 import gi
 import os
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GdkPixbuf, Gio
+from gi.repository import Gtk, GdkPixbuf, Gdk, Gio
+from pathlib import Path
 
 from core.browser_manager import BrowserManager
 from core.webapp_manager import WebAppManager
@@ -74,19 +75,39 @@ class WebAppRow(Gtk.ListBoxRow):
         os.system(f"gtk-launch {os.path.basename(self.webapp.desktop_file)}")
 
 class MainWindow(Gtk.Window):
-    def __init__(self, browser_manager: BrowserManager, webapp_manager: WebAppManager, _translate):
+    def __init__(self, browser_manager: BrowserManager, webapp_manager: WebAppManager, _translate, assets_dir):
         super().__init__(title=_translate("Soplos WebApp Manager"))
         self.browser_manager = browser_manager
         self.webapp_manager = webapp_manager
         self._ = _translate
+        self.assets_dir = Path(assets_dir) if assets_dir else None
         
         self.set_default_size(600, 450)
         self.set_position(Gtk.WindowPosition.CENTER)
+        
+        # Set window icon from file (reliable across all DEs)
+        self._set_window_icon()
         
         self.setup_headerbar()
         self.setup_ui()
         self.setup_shortcuts()
         self.load_webapps()
+    
+    def _set_window_icon(self):
+        """Set window icon from assets, with fallback chain for GNOME/XFCE/Plasma."""
+        if self.assets_dir:
+            icon_path = self.assets_dir / 'icons' / 'org.soplos.webappmanager.png'
+            if icon_path.exists():
+                try:
+                    self.set_icon_from_file(str(icon_path))
+                    return
+                except Exception as e:
+                    print(f"Error setting window icon from file: {e}")
+        # Fallback: try by icon name (works if installed in hicolor)
+        try:
+            self.set_icon_name('org.soplos.webappmanager')
+        except Exception:
+            self.set_icon_name('applications-internet')
         
     def setup_shortcuts(self):
         accel_group = Gtk.AccelGroup()
@@ -99,6 +120,7 @@ class MainWindow(Gtk.Window):
         self.header = Gtk.HeaderBar()
         self.header.set_show_close_button(True)
         self.header.set_title(self.get_title())
+        self.header.set_decoration_layout("menu:minimize,maximize,close")
         self.set_titlebar(self.header)
         
         # Add button
@@ -129,11 +151,27 @@ class MainWindow(Gtk.Window):
         empty_box.set_valign(Gtk.Align.CENTER)
         empty_box.set_halign(Gtk.Align.CENTER)
         
-        icon = Gtk.Image.new_from_icon_name("applications-internet", Gtk.IconSize.DIALOG)
-        icon.set_pixel_size(128)
-        context = icon.get_style_context()
+        # Use app icon in empty state too
+        empty_icon = Gtk.Image()
+        if self.assets_dir:
+            icon_128 = self.assets_dir / 'icons' / '128x128' / 'org.soplos.webappmanager.png'
+            if icon_128.exists():
+                try:
+                    pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(str(icon_128), 128, 128, True)
+                    empty_icon.set_from_pixbuf(pixbuf)
+                except:
+                    empty_icon.set_from_icon_name("applications-internet", Gtk.IconSize.DIALOG)
+                    empty_icon.set_pixel_size(128)
+            else:
+                empty_icon.set_from_icon_name("applications-internet", Gtk.IconSize.DIALOG)
+                empty_icon.set_pixel_size(128)
+        else:
+            empty_icon.set_from_icon_name("applications-internet", Gtk.IconSize.DIALOG)
+            empty_icon.set_pixel_size(128)
+        
+        context = empty_icon.get_style_context()
         context.add_class('dim-label')
-        empty_box.pack_start(icon, False, False, 0)
+        empty_box.pack_start(empty_icon, False, False, 0)
         
         label = Gtk.Label(label=self._("No WebApps installed.\nClick the '+' button to add one."))
         label.set_justify(Gtk.Justification.CENTER)

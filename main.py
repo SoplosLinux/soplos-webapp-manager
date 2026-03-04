@@ -5,12 +5,32 @@ import signal
 import gettext
 from pathlib import Path
 
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, GLib, Gdk, GdkPixbuf
+
 # Basic configuration
 PROJECT_ROOT = Path(__file__).parent
 sys.path.insert(0, str(PROJECT_ROOT))
 LOCALE_DIR = PROJECT_ROOT / "locale"
+ASSETS_DIR = PROJECT_ROOT / "assets"
 
-# Fast native internationalization (No redundant intermediate manager)
+# Desktop integration (same values as wrapper, ensures consistency when run directly)
+GLib.set_prgname('org.soplos.webappmanager')
+GLib.set_application_name('soplos-webapp-manager')
+Gtk.Window.set_default_icon_name('org.soplos.webappmanager')
+if hasattr(Gdk, 'set_program_class'):
+    Gdk.set_program_class('org.soplos.webappmanager')
+
+# Set window icon from file (works even without hicolor installation)
+_icon_file = ASSETS_DIR / 'icons' / 'org.soplos.webappmanager.png'
+if _icon_file.exists():
+    try:
+        Gtk.Window.set_default_icon(GdkPixbuf.Pixbuf.new_from_file(str(_icon_file)))
+    except Exception:
+        pass
+
+# Fast native internationalization
 gettext.bindtextdomain('soplos-webapp-manager', str(LOCALE_DIR))
 gettext.textdomain('soplos-webapp-manager')
 try:
@@ -42,13 +62,9 @@ def main():
     browser_manager = BrowserManager()
     webapp_manager = WebAppManager(browser_manager)
     
-    # Import UI and start
-    import gi
-    gi.require_version('Gtk', '3.0')
-    from gi.repository import Gtk
     from ui.main_window import MainWindow
     
-    app_window = MainWindow(browser_manager, webapp_manager, _)
+    app_window = MainWindow(browser_manager, webapp_manager, _, ASSETS_DIR)
     app_window.connect("destroy", Gtk.main_quit)
     app_window.show_all()
     
