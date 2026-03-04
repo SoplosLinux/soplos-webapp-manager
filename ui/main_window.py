@@ -8,8 +8,9 @@ from core.browser_manager import BrowserManager
 from core.webapp_manager import WebAppManager
 from ui.dialogs.add_webapp_dialog import AddWebAppDialog
 
+
 class WebAppRow(Gtk.ListBoxRow):
-    def __init__(self, webapp, on_delete_callback):
+    def __init__(self, webapp, on_edit_callback, on_delete_callback):
         super().__init__()
         self.webapp = webapp
         
@@ -44,7 +45,6 @@ class WebAppRow(Gtk.ListBoxRow):
         
         label_browser = Gtk.Label(label=webapp.browser_id)
         label_browser.set_halign(Gtk.Align.START)
-        # Use dim label for browser
         context = label_browser.get_style_context()
         context.add_class('dim-label')
         
@@ -61,6 +61,13 @@ class WebAppRow(Gtk.ListBoxRow):
         btn_run.set_valign(Gtk.Align.CENTER)
         box.pack_start(btn_run, False, False, 0)
         
+        # Edit button
+        btn_edit = Gtk.Button()
+        btn_edit.set_image(Gtk.Image.new_from_icon_name("document-edit", Gtk.IconSize.BUTTON))
+        btn_edit.set_valign(Gtk.Align.CENTER)
+        btn_edit.connect("clicked", lambda w: on_edit_callback(self.webapp))
+        box.pack_start(btn_edit, False, False, 0)
+        
         # Delete button
         btn_delete = Gtk.Button()
         btn_delete.set_image(Gtk.Image.new_from_icon_name("user-trash", Gtk.IconSize.BUTTON))
@@ -74,9 +81,10 @@ class WebAppRow(Gtk.ListBoxRow):
     def on_run_clicked(self, widget):
         os.system(f"gtk-launch {os.path.basename(self.webapp.desktop_file)}")
 
-class MainWindow(Gtk.Window):
-    def __init__(self, browser_manager: BrowserManager, webapp_manager: WebAppManager, _translate, assets_dir):
-        super().__init__(title=_translate("Soplos WebApp Manager"))
+
+class MainWindow(Gtk.ApplicationWindow):
+    def __init__(self, application, browser_manager: BrowserManager, webapp_manager: WebAppManager, _translate, assets_dir):
+        super().__init__(application=application, title=_translate("Soplos WebApp Manager"))
         self.browser_manager = browser_manager
         self.webapp_manager = webapp_manager
         self._ = _translate
@@ -85,36 +93,17 @@ class MainWindow(Gtk.Window):
         self.set_default_size(600, 450)
         self.set_position(Gtk.WindowPosition.CENTER)
         
-        # Set window icon from file (reliable across all DEs)
-        self._set_window_icon()
-        
         self.setup_headerbar()
         self.setup_ui()
         self.setup_shortcuts()
         self.load_webapps()
-    
-    def _set_window_icon(self):
-        """Set window icon from assets, with fallback chain for GNOME/XFCE/Plasma."""
-        if self.assets_dir:
-            icon_path = self.assets_dir / 'icons' / 'org.soplos.webappmanager.png'
-            if icon_path.exists():
-                try:
-                    self.set_icon_from_file(str(icon_path))
-                    return
-                except Exception as e:
-                    print(f"Error setting window icon from file: {e}")
-        # Fallback: try by icon name (works if installed in hicolor)
-        try:
-            self.set_icon_name('org.soplos.webappmanager')
-        except Exception:
-            self.set_icon_name('applications-internet')
         
     def setup_shortcuts(self):
         accel_group = Gtk.AccelGroup()
         self.add_accel_group(accel_group)
         
         key, mod = Gtk.accelerator_parse("<Primary>q")
-        accel_group.connect(key, mod, Gtk.AccelFlags.VISIBLE, lambda *args: Gtk.main_quit())
+        accel_group.connect(key, mod, Gtk.AccelFlags.VISIBLE, lambda *args: self.get_application().quit())
         
     def setup_headerbar(self):
         self.header = Gtk.HeaderBar()
@@ -151,27 +140,12 @@ class MainWindow(Gtk.Window):
         empty_box.set_valign(Gtk.Align.CENTER)
         empty_box.set_halign(Gtk.Align.CENTER)
         
-        # Use app icon in empty state too
-        empty_icon = Gtk.Image()
-        if self.assets_dir:
-            icon_128 = self.assets_dir / 'icons' / '128x128' / 'org.soplos.webappmanager.png'
-            if icon_128.exists():
-                try:
-                    pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(str(icon_128), 128, 128, True)
-                    empty_icon.set_from_pixbuf(pixbuf)
-                except:
-                    empty_icon.set_from_icon_name("applications-internet", Gtk.IconSize.DIALOG)
-                    empty_icon.set_pixel_size(128)
-            else:
-                empty_icon.set_from_icon_name("applications-internet", Gtk.IconSize.DIALOG)
-                empty_icon.set_pixel_size(128)
-        else:
-            empty_icon.set_from_icon_name("applications-internet", Gtk.IconSize.DIALOG)
-            empty_icon.set_pixel_size(128)
-        
-        context = empty_icon.get_style_context()
+        # Web browser compass icon (as in screenshot1.png)
+        icon = Gtk.Image.new_from_icon_name("applications-internet", Gtk.IconSize.DIALOG)
+        icon.set_pixel_size(128)
+        context = icon.get_style_context()
         context.add_class('dim-label')
-        empty_box.pack_start(empty_icon, False, False, 0)
+        empty_box.pack_start(icon, False, False, 0)
         
         label = Gtk.Label(label=self._("No WebApps installed.\nClick the '+' button to add one."))
         label.set_justify(Gtk.Justification.CENTER)
@@ -193,23 +167,19 @@ class MainWindow(Gtk.Window):
         self.stack.add_named(scrolled, "list")
         
     def load_webapps(self):
-        # Clear current list
         for child in self.listbox.get_children():
             self.listbox.remove(child)
             
         webapps = self.webapp_manager.list_webapps()
         
-        # Force widgets to report as visible before we try to switch stack state
         self.listbox.show_all()
         self.stack.show_all()
         
         if not webapps:
-            # Show empty state if no webapps
             self.stack.set_visible_child_name("empty")
         else:
-            # Show list
             for wa in webapps:
-                row = WebAppRow(wa, self.confirm_and_delete_webapp)
+                row = WebAppRow(wa, self.edit_webapp, self.confirm_and_delete_webapp)
                 self.listbox.add(row)
             self.listbox.show_all()
             self.stack.set_visible_child_name("list")
@@ -236,6 +206,126 @@ class MainWindow(Gtk.Window):
                 self.load_webapps()
         dialog.destroy()
         
+    def edit_webapp(self, wa):
+        """Open a dialog to edit the webapp properties (name, url, icon, browser, navbar)."""
+        dialog = Gtk.Dialog(
+            title=self._("Edit WebApp"),
+            transient_for=self,
+            flags=0
+        )
+        dialog.add_buttons(
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_OK, Gtk.ResponseType.OK
+        )
+        dialog.set_default_size(450, 400)
+        dialog.set_border_width(10)
+        
+        box = dialog.get_content_area()
+        box.set_spacing(15)
+        
+        grid = Gtk.Grid()
+        grid.set_column_spacing(10)
+        grid.set_row_spacing(10)
+        box.pack_start(grid, True, True, 0)
+        
+        # Name
+        entry_name = Gtk.Entry()
+        entry_name.set_text(wa.name)
+        grid.attach(Gtk.Label(label=self._("Name:")), 0, 0, 1, 1)
+        grid.attach(entry_name, 1, 0, 2, 1)
+        
+        # URL
+        entry_url = Gtk.Entry()
+        entry_url.set_text(wa.url)
+        grid.attach(Gtk.Label(label=self._("Web Address:")), 0, 1, 1, 1)
+        grid.attach(entry_url, 1, 1, 2, 1)
+        
+        # Icon
+        icon_image = Gtk.Image()
+        selected_icon = [wa.icon_path]
+        if os.path.exists(wa.icon_path):
+            try:
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(wa.icon_path, 48, 48, True)
+                icon_image.set_from_pixbuf(pixbuf)
+            except:
+                icon_image.set_from_icon_name("applications-internet", Gtk.IconSize.DIALOG)
+        else:
+            icon_image.set_from_icon_name("applications-internet", Gtk.IconSize.DIALOG)
+        
+        icon_btn = Gtk.Button(label=self._("Select Icon"))
+        def on_icon_clicked(button):
+            chooser = Gtk.FileChooserDialog(
+                title=self._("Select an icon"),
+                parent=dialog,
+                action=Gtk.FileChooserAction.OPEN,
+            )
+            chooser.add_buttons(
+                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                Gtk.STOCK_OPEN, Gtk.ResponseType.OK,
+            )
+            filt = Gtk.FileFilter()
+            filt.set_name(self._("Images (PNG, SVG, JPG)"))
+            filt.add_mime_type("image/png")
+            filt.add_mime_type("image/svg+xml")
+            filt.add_mime_type("image/jpeg")
+            chooser.add_filter(filt)
+            if chooser.run() == Gtk.ResponseType.OK:
+                path = chooser.get_filename()
+                selected_icon[0] = path
+                try:
+                    pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, 48, 48, True)
+                    icon_image.set_from_pixbuf(pixbuf)
+                except:
+                    pass
+            chooser.destroy()
+        
+        icon_btn.connect("clicked", on_icon_clicked)
+        grid.attach(Gtk.Label(label=self._("Icon:")), 0, 2, 1, 1)
+        grid.attach(icon_image, 1, 2, 1, 1)
+        grid.attach(icon_btn, 2, 2, 1, 1)
+        
+        # Browser
+        combo_browser = Gtk.ComboBoxText()
+        browsers = self.browser_manager.get_browsers_list()
+        active_index = 0
+        for i, brw in enumerate(browsers):
+            combo_browser.append(brw.id_name, brw.display_name)
+            if brw.id_name == wa.browser_id:
+                active_index = i
+        combo_browser.set_active(active_index)
+        grid.attach(Gtk.Label(label=self._("Browser:")), 0, 3, 1, 1)
+        grid.attach(combo_browser, 1, 3, 2, 1)
+        
+        # Navbar Switch
+        switch_navbar = Gtk.Switch()
+        switch_navbar.set_active(wa.show_navbar)
+        switch_navbar.set_halign(Gtk.Align.START)
+        grid.attach(Gtk.Label(label=self._("Navigation Bar:")), 0, 4, 1, 1)
+        grid.attach(switch_navbar, 1, 4, 2, 1)
+        
+        dialog.show_all()
+        response = dialog.run()
+        
+        if response == Gtk.ResponseType.OK:
+            new_name = entry_name.get_text().strip()
+            new_url = entry_url.get_text().strip()
+            new_icon = selected_icon[0]
+            new_browser_id = combo_browser.get_active_id()
+            new_show_navbar = switch_navbar.get_active()
+            
+            self.webapp_manager.update_webapp(
+                wa.id_name,
+                new_name=new_name,
+                new_icon=new_icon,
+                new_url=new_url,
+                new_browser_id=new_browser_id,
+                new_show_navbar=new_show_navbar
+            )
+            self.load_webapps()
+        
+        dialog.destroy()
+
+
     def confirm_and_delete_webapp(self, wa):
         dialog = Gtk.MessageDialog(
             transient_for=self,

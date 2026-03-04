@@ -32,22 +32,35 @@ class Browser:
         if self.id_name in ["chromium", "chrome", "brave", "vivaldi", "edge"]:
             cmd.append(f"--app={url}")
             cmd.append(f"--user-data-dir={profile_path}")
+            # Set both class and name for maximum compatibility with task managers
             cmd.append(f"--class={class_name}")
+            cmd.append(f"--name={class_name}")
+            # Wayland specific app-id support
+            cmd.append(f"--wayland-app-id={class_name}")
             
         # Firefox based
         elif self.id_name in ["firefox", "librewolf"]:
-            cmd.append(f"--class {class_name}")
-            cmd.append(f"--profile {profile_path}")
-            cmd.append("--no-remote")
+            # Set environment variable for Wayland/modern DEs app-id matching
+            cmd.insert(0, f"env MOZ_APP_REMOTINGNAME={class_name}")
+            cmd.append("-no-remote")
+            cmd.append("-new-instance")
+            cmd.append("-profile")
+            cmd.append(f'"{profile_path}"')
+            # These work on X11
+            cmd.append("-class")
+            cmd.append(class_name)
+            cmd.append("-name")
+            cmd.append(class_name)
             cmd.append(url)
             
         # WebKit based (Epiphany)
         elif self.id_name == "epiphany":
-            cmd.append(f"--application-mode")
+            cmd.append("--application-mode")
             cmd.append(f"--profile={profile_path}")
             cmd.append(url)
             
         return " ".join(cmd)
+
 
 
 class BrowserManager:

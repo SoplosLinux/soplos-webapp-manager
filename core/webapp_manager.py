@@ -15,7 +15,7 @@ from .browser_manager import BrowserManager, Browser
 
 class WebApp:
     """Represents an installed WebApp."""
-    def __init__(self, id_name: str, name: str, url: str, browser_id: str, icon_path: str, desktop_file: str, profile_path: str):
+    def __init__(self, id_name: str, name: str, url: str, browser_id: str, icon_path: str, desktop_file: str, profile_path: str, show_navbar: bool = False):
         self.id_name = id_name
         self.name = name
         self.url = url
@@ -23,6 +23,7 @@ class WebApp:
         self.icon_path = icon_path
         self.desktop_file = desktop_file
         self.profile_path = profile_path
+        self.show_navbar = show_navbar
 
 class WebAppManager:
     def __init__(self, browser_manager: BrowserManager):
@@ -38,8 +39,8 @@ class WebAppManager:
         webapps = []
         for file in self.desktop_dir.glob("soplos-webapp-*.desktop"):
             config = configparser.ConfigParser(interpolation=None)
+            config.optionxform = str # Preserve case for reading correctly
             try:
-                # configparser needs a single section to read cleanly, .desktop files have [Desktop Entry]
                 config.read(file)
                 if "Desktop Entry" in config:
                     entry = config["Desktop Entry"]
@@ -54,10 +55,13 @@ class WebAppManager:
                     browser_id = "unknown"
                     profile_path = str(self.profiles_dir / id_name)
                     
-                    # Basic heuristic to extract URL: look for http
+                    # Basic heuristic to extract URL
                     for part in exec_cmd.split():
                         if part.startswith("http://") or part.startswith("https://"):
                             url = part
+                            break
+                        elif part.startswith("--app="):
+                            url = part.replace("--app=", "")
                             break
                     
                     # Find which browser corresponds
@@ -66,7 +70,11 @@ class WebAppManager:
                             browser_id = brw.id_name
                             break
                     
-                    webapps.append(WebApp(id_name, name, url, browser_id, icon, str(file), profile_path))
+                    # Read navbar state from custom field
+                    show_navbar_val = entry.get("X-Soplos-Navbar", "false")
+                    show_navbar = show_navbar_val.lower() == "true"
+                    
+                    webapps.append(WebApp(id_name, name, url, browser_id, icon, str(file), profile_path, show_navbar))
             except Exception as e:
                 print(f"Error reading {file}: {e}")
                 
@@ -92,6 +100,98 @@ class WebAppManager:
             
         return success
 
+    def update_webapp(self, id_name: str, new_name: str = None, new_icon: str = None, new_category: str = None, 
+                      new_url: str = None, new_browser_id: str = None, new_show_navbar: bool = None) -> bool:
+        """Updates an existing webapp's .desktop file."""
+        desktop_file = self.desktop_dir / f"soplos-webapp-{id_name}.desktop"
+        if not desktop_file.exists():
+            return False
+        
+        config = configparser.ConfigParser(interpolation=None)
+        config.optionxform = str  # IMPORTANT: Preserve case (Exec instead of exec)
+        config.read(desktop_file)
+        
+        if "Desktop Entry" not in config:
+            return False
+        
+        entry = config["Desktop Entry"]
+        
+        # Cleanup any lowercase keys from previous buggy version to avoid DuplicateOptionError later
+        standard_keys = ["Name", "Exec", "Icon", "Categories", "StartupWMClass", "Terminal", "Type", "Version", "Comment", "StartupNotify"]
+        for key in list(entry.keys()):
+            if key != "X-Soplos-Navbar" and key.lower() in [k.lower() for k in standard_keys]:
+                if key not in standard_keys: # If it's not the exact standard casing, remove it
+                    del entry[key]
+
+        # Always align StartupWMClass with the desktop filename for Wayland compatibility
+        class_name = f"soplos-webapp-{id_name}"
+        entry["StartupWMClass"] = class_name
+        
+        if new_name:
+            entry["Name"] = new_name
+            entry["Comment"] = f"Soplos WebApp for {new_name}"
+        if new_icon:
+            entry["Icon"] = new_icon
+        if new_category:
+            entry["Categories"] = f"{new_category};"
+            
+        # Extract current data if not provided
+        exec_cmd = entry.get("Exec", "")
+        # ... fallback for lowercase if it was already corrupted
+        if not exec_cmd:
+            exec_cmd = entry.get("exec", "")
+            
+        current_url = ""
+        current_browser_id = "unknown"
+        
+        for part in exec_cmd.split():
+            if part.startswith("http://") or part.startswith("https://"):
+                current_url = part
+                break
+            elif part.startswith("--app="):
+                current_url = part.replace("--app=", "")
+                break
+        
+        for brw in self.browser_manager.get_browsers_list():
+            if brw.executable in exec_cmd or (brw.is_flatpak and brw.flatpak_id in exec_cmd):
+                current_browser_id = brw.id_name
+                break
+        
+        url = new_url if new_url is not None else current_url
+        browser_id = new_browser_id if new_browser_id is not None else current_browser_id
+        
+        # Determine show_navbar
+        if new_show_navbar is not None:
+            show_navbar = new_show_navbar
+        else:
+            # Try to read from X-Soplos-Navbar first, fallback to heuristic
+            show_navbar_val = entry.get("X-Soplos-Navbar", "")
+            if show_navbar_val:
+                show_navbar = show_navbar_val.lower() == "true"
+            else:
+                show_navbar = "--nav" in exec_cmd or "userChrome.css" not in exec_cmd
+        
+        # Save navbar state in custom field
+        entry["X-Soplos-Navbar"] = "true" if show_navbar else "false"
+            
+        if url and browser_id != "unknown":
+            browser = self.browser_manager.get_browser(browser_id)
+            if browser:
+                profile_path = self.profiles_dir / id_name
+                if browser.id_name in ["firefox", "librewolf"]:
+                    self._setup_firefox_profile(str(profile_path), show_navbar)
+                entry["Exec"] = browser.get_launch_command(url, str(profile_path), class_name, show_navbar)
+        
+        with open(desktop_file, 'w') as f:
+            # IMPORTANT: space_around_delimiters=False for .desktop compliance
+            config.write(f, space_around_delimiters=False)
+        
+        os.chmod(desktop_file, 0o755)
+        # Notify system of desktop entry change
+        os.system("update-desktop-database ~/.local/share/applications 2>/dev/null")
+        return True
+
+
     def create_webapp(self, name: str, url: str, icon_path: str, category: str, browser_id: str, show_navbar: bool = False) -> Optional[WebApp]:
         """Creates a new webapp."""
         browser = self.browser_manager.get_browser(browser_id)
@@ -111,7 +211,7 @@ class WebAppManager:
         if browser.id_name in ["firefox", "librewolf", "firefox-flatpak"]:
             self._setup_firefox_profile(str(profile_path), show_navbar)
             
-        class_name = f"WebApp-{id_name}"
+        class_name = f"soplos-webapp-{id_name}"
         exec_cmd = browser.get_launch_command(url, str(profile_path), class_name, show_navbar)
         
         desktop_file = self.desktop_dir / f"soplos-webapp-{id_name}.desktop"
@@ -128,7 +228,9 @@ Icon={icon_path}
 Categories={category};
 StartupWMClass={class_name}
 StartupNotify=true
+X-Soplos-Navbar={"true" if show_navbar else "false"}
 """
+
         
         with open(desktop_file, 'w') as f:
             f.write(desktop_content)
