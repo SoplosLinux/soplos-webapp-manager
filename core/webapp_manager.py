@@ -110,6 +110,18 @@ class WebAppManager:
             
         return success
 
+    def _get_chrome_id(self, url: str) -> Optional[str]:
+        """Calculates the internal ID Chrome generates for a URL in --app mode."""
+        try:
+            parsed = urlparse(url)
+            host = parsed.netloc
+            if host:
+                # This matches the user's dbus-send: "chrome-web.whatsapp.com__-Default"
+                return f"chrome-{host}__-Default"
+        except:
+            pass
+        return None
+
     def _manage_chrome_compat_links(self, id_name: str, url: str, browser_id: str):
         """
         KDE Plasma 6 (Wayland) often ignores --wayland-app-id and looks for a .desktop
@@ -121,9 +133,8 @@ class WebAppManager:
             return
             
         try:
-            parsed = urlparse(url)
-            host = parsed.netloc
-            if not host:
+            chrome_id = self._get_chrome_id(url)
+            if not chrome_id:
                 return
                 
             # Remove any existing symlinks for this specific webapp first
@@ -131,9 +142,7 @@ class WebAppManager:
                 if sym.is_symlink() and str(sym.readlink()).endswith(f"soplos-webapp-{id_name}.desktop"):
                     sym.unlink()
                     
-            # Create the link KWin expects: chrome-{host}__-Default.desktop
-            # Based on user's dbus-send: "chrome-web.whatsapp.com__-Default"
-            compat_name = f"chrome-{host}__-Default.desktop"
+            compat_name = f"{chrome_id}.desktop"
             target_name = f"soplos-webapp-{id_name}.desktop"
             compat_path = self.desktop_dir / compat_name
             target_path = self.desktop_dir / target_name
@@ -166,9 +175,7 @@ class WebAppManager:
                 if key not in standard_keys: # If it's not the exact standard casing, remove it
                     del entry[key]
 
-        # Always align StartupWMClass with the desktop filename for Wayland compatibility
-        class_name = f"soplos-webapp-{id_name}"
-        entry["StartupWMClass"] = class_name
+        # StartupWMClass will be updated later once we know the browser
         
         if new_name:
             entry["Name"] = new_name
@@ -203,6 +210,13 @@ class WebAppManager:
         url = new_url if new_url is not None else current_url
         browser_id = new_browser_id if new_browser_id is not None else current_browser_id
         
+        # Align StartupWMClass for Wayland compatibility
+        if browser_id in ["chrome", "chromium", "brave", "vivaldi", "edge"]:
+            chrome_id = self._get_chrome_id(url)
+            entry["StartupWMClass"] = chrome_id if chrome_id else f"soplos-webapp-{id_name}"
+        else:
+            entry["StartupWMClass"] = f"soplos-webapp-{id_name}"
+        
         # Extra parameters
         if new_extra_params is not None:
             extra_params = new_extra_params
@@ -230,6 +244,7 @@ class WebAppManager:
             browser = self.browser_manager.get_browser(browser_id)
             if browser:
                 profile_path = self.profiles_dir / id_name
+                class_name = f"soplos-webapp-{id_name}"
                 if browser.id_name in ["firefox", "librewolf"]:
                     self._setup_firefox_profile(str(profile_path), show_navbar)
                 entry["Exec"] = browser.get_launch_command(url, str(profile_path), class_name, show_navbar, extra_params)
@@ -267,6 +282,14 @@ class WebAppManager:
             self._setup_firefox_profile(str(profile_path), show_navbar)
             
         class_name = f"soplos-webapp-{id_name}"
+        
+        # Determine StartupWMClass for Wayland compatibility
+        if browser_id in ["chrome", "chromium", "brave", "vivaldi", "edge"]:
+            chrome_id = self._get_chrome_id(url)
+            startup_class = chrome_id if chrome_id else class_name
+        else:
+            startup_class = class_name
+            
         exec_cmd = browser.get_launch_command(url, str(profile_path), class_name, show_navbar, extra_params)
         
         desktop_file = self.desktop_dir / f"soplos-webapp-{id_name}.desktop"
@@ -281,7 +304,7 @@ X-MultipleArgs=false
 Type=Application
 Icon={icon_path}
 Categories={category};
-StartupWMClass={class_name}
+StartupWMClass={startup_class}
 StartupNotify=true
 X-Soplos-Navbar={"true" if show_navbar else "false"}
 X-Soplos-ExtraParams={extra_params}
