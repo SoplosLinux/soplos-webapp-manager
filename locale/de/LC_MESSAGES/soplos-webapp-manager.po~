@@ -1,0 +1,90 @@
+# German translations for PACKAGE package.
+# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-04 13:00+0100\n"
+"PO-Revision-Date: 2026-03-04 13:00+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: main.py:39
+msgid "Starting Soplos WebApp Manager..."
+msgstr "Starten des Soplos WebApp-Managers..."
+
+#: ui/dialogs/add_webapp_dialog.py:11 ui/main_window.py:107
+msgid "Add WebApp"
+msgstr "WebApp hinzufügen"
+
+#: ui/dialogs/add_webapp_dialog.py:34
+msgid "e.g. YouTube"
+msgstr "z.B. YouTube"
+
+#: ui/dialogs/add_webapp_dialog.py:35
+msgid "Name:"
+msgstr "Name:"
+
+#: ui/dialogs/add_webapp_dialog.py:42
+msgid "Web Address:"
+msgstr "Webadresse:"
+
+#: ui/dialogs/add_webapp_dialog.py:47
+msgid "Select Icon"
+msgstr "Symbol auswählen"
+
+#: ui/dialogs/add_webapp_dialog.py:49
+msgid "Icon:"
+msgstr "Symbol:"
+
+#: ui/dialogs/add_webapp_dialog.py:59
+msgid "Category:"
+msgstr "Kategorie:"
+
+#: ui/dialogs/add_webapp_dialog.py:69
+msgid "Browser:"
+msgstr "Browser:"
+
+#: ui/dialogs/add_webapp_dialog.py:76
+msgid "Navigation Bar:"
+msgstr "Navigationsleiste:"
+
+#: ui/dialogs/add_webapp_dialog.py:97
+msgid "Select an icon"
+msgstr "Wählen Sie ein Symbol aus"
+
+#: ui/dialogs/add_webapp_dialog.py:107
+msgid "Images (PNG, SVG, JPG)"
+msgstr "Bilder (PNG, SVG, JPG)"
+
+#: ui/main_window.py:78
+msgid "Soplos WebApp Manager"
+msgstr "Soplos WebApp-Manager"
+
+#: ui/main_window.py:114
+msgid "Remove WebApp"
+msgstr "WebApp entfernen"
+
+#: ui/main_window.py:138
+msgid ""
+"No WebApps installed.\n"
+"Click the '+' button to add one."
+msgstr ""
+"Keine WebApps installiert.\n"
+"Klicken Sie auf die Schaltfläche '+', um eine hinzuzufügen."
+
+#: ui/main_window.py:207
+msgid "Are you sure you want to delete {}?"
+msgstr "Sind Sie sicher, dass Sie {} löschen möchten?"
+
+#: ui/main_window.py:209
+msgid "This will remove its .desktop file and the isolated browser profile."
+msgstr "Dadurch wird die .desktop-Datei und das isolierte Browserprofil entfernt."

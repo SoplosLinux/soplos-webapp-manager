@@ -8,81 +8,89 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-04 13:00+0100\n"
+"POT-Creation-Date: 2026-03-04 15:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.py:39
+#: main.py:60
 msgid "Starting Soplos WebApp Manager..."
 msgstr ""
 
-#: ui/dialogs/add_webapp_dialog.py:11 ui/main_window.py:107
+#: ui/main_window.py:118
 msgid "Add WebApp"
+msgstr ""
+
+#: ui/main_window.py:125
+msgid "Remove WebApp"
+msgstr ""
+
+#: ui/main_window.py:150
+msgid ""
+"No WebApps installed.\n"
+"Click the '+' button to add one."
+msgstr ""
+
+#: ui/main_window.py:213
+msgid "Edit WebApp"
+msgstr ""
+
+#: ui/main_window.py:235 ui/dialogs/add_webapp_dialog.py:35
+msgid "Name:"
+msgstr ""
+
+#: ui/main_window.py:241 ui/dialogs/add_webapp_dialog.py:42
+msgid "Web Address:"
+msgstr ""
+
+#: ui/main_window.py:256 ui/dialogs/add_webapp_dialog.py:47
+msgid "Select Icon"
+msgstr ""
+
+#: ui/main_window.py:259 ui/dialogs/add_webapp_dialog.py:103
+msgid "Select an icon"
+msgstr ""
+
+#: ui/main_window.py:268 ui/dialogs/add_webapp_dialog.py:113
+msgid "Images (PNG, SVG, JPG)"
+msgstr ""
+
+#: ui/main_window.py:284 ui/dialogs/add_webapp_dialog.py:49
+msgid "Icon:"
+msgstr ""
+
+#: ui/main_window.py:297 ui/dialogs/add_webapp_dialog.py:69
+msgid "Browser:"
+msgstr ""
+
+#: ui/main_window.py:304 ui/dialogs/add_webapp_dialog.py:76
+msgid "Navigation Bar:"
+msgstr ""
+
+#: ui/main_window.py:310 ui/dialogs/add_webapp_dialog.py:82
+msgid "Extra Parameters:"
+msgstr ""
+
+#: ui/main_window.py:344
+msgid "Are you sure you want to delete {}?"
+msgstr ""
+
+#: ui/main_window.py:346
+msgid "This will remove its .desktop file and the isolated browser profile."
 msgstr ""
 
 #: ui/dialogs/add_webapp_dialog.py:34
 msgid "e.g. YouTube"
 msgstr ""
 
-#: ui/dialogs/add_webapp_dialog.py:35
-msgid "Name:"
-msgstr ""
-
-#: ui/dialogs/add_webapp_dialog.py:42
-msgid "Web Address:"
-msgstr ""
-
-#: ui/dialogs/add_webapp_dialog.py:47
-msgid "Select Icon"
-msgstr ""
-
-#: ui/dialogs/add_webapp_dialog.py:49
-msgid "Icon:"
-msgstr ""
-
 #: ui/dialogs/add_webapp_dialog.py:59
 msgid "Category:"
 msgstr ""
 
-#: ui/dialogs/add_webapp_dialog.py:69
-msgid "Browser:"
-msgstr ""
-
-#: ui/dialogs/add_webapp_dialog.py:76
-msgid "Navigation Bar:"
-msgstr ""
-
-#: ui/dialogs/add_webapp_dialog.py:97
-msgid "Select an icon"
-msgstr ""
-
-#: ui/dialogs/add_webapp_dialog.py:107
-msgid "Images (PNG, SVG, JPG)"
-msgstr ""
-
-#: ui/main_window.py:78
-msgid "Soplos WebApp Manager"
-msgstr ""
-
-#: ui/main_window.py:114
-msgid "Remove WebApp"
-msgstr ""
-
-#: ui/main_window.py:138
-msgid ""
-"No WebApps installed.\n"
-"Click the '+' button to add one."
-msgstr ""
-
-#: ui/main_window.py:207
-msgid "Are you sure you want to delete {}?"
-msgstr ""
-
-#: ui/main_window.py:209
-msgid "This will remove its .desktop file and the isolated browser profile."
+#: ui/dialogs/add_webapp_dialog.py:81
+msgid "e.g. --start-maximized"
 msgstr ""
