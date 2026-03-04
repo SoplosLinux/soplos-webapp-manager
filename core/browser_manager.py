@@ -30,16 +30,21 @@ class Browser:
 
         # Chrome / Chromium based
         if self.id_name in ["chromium", "chrome", "brave", "vivaldi", "edge"]:
-            cmd.append(f"--app={url}")
-            cmd.append(f"--user-data-dir={profile_path}")
-            # Force ozone platform hint for better Wayland support
-            cmd.append("--ozone-platform-hint=auto")
-            # Set class, name and wm-class for maximum compatibility with task managers
+            # Set environment variable for desktop integration (used by KDE/GNOME to map windows)
+            cmd.insert(0, f"env CHROME_DESKTOP={class_name}.desktop")
+            
+            # Identity and platform flags FIRST: if they come after --app they might be ignored
+            # Force native Wayland mode more aggressively
+            cmd.append("--enable-features=UseOzonePlatform")
+            cmd.append("--ozone-platform=wayland")
+            
+            cmd.append(f"--wayland-app-id={class_name}")
+            cmd.append(f"--app-name={class_name}")
             cmd.append(f"--class={class_name}")
             cmd.append(f"--name={class_name}")
             cmd.append(f"--wm-class={class_name}")
-            # Wayland specific app-id support
-            cmd.append(f"--wayland-app-id={class_name}")
+            cmd.append(f"--user-data-dir={profile_path}")
+            cmd.append(f"--app={url}")
             
         # Firefox based
         elif self.id_name in ["firefox", "librewolf"]:
