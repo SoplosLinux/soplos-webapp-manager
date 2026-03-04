@@ -8,7 +8,7 @@
 
 <div align="center">
   <img src="assets/screenshots/screenshot1.png" width="30%" alt="Main Window"/>
-  <img src="assets/screenshots/screnshot2.png" width="30%" alt="Creation Dialog"/>
+  <img src="assets/screenshots/screenshot2.png" width="30%" alt="Creation Dialog"/>
   <img src="assets/screenshots/screenshot3.png" width="30%" alt="WebApp Running"/>
 </div>
 

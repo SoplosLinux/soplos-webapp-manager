@@ -204,7 +204,7 @@ class MainWindow(Gtk.Window):
             flags=0,
             message_type=Gtk.MessageType.WARNING,
             buttons=Gtk.ButtonsType.YES_NO,
-            text=self._(f"Are you sure you want to delete {wa.name}?")
+            text=self._("Are you sure you want to delete {}?").format(wa.name)
         )
         dialog.format_secondary_text(self._("This will remove its .desktop file and the isolated browser profile."))
         
