@@ -38,9 +38,8 @@ msgstr ""
 "Cliquez sur le bouton '+' pour en ajouter une."
 
 #: ui/main_window.py:213
-#, fuzzy
 msgid "Edit WebApp"
-msgstr "Ajouter une WebApp"
+msgstr "Modifier la WebApp"
 
 #: ui/main_window.py:235 ui/dialogs/add_webapp_dialog.py:35
 msgid "Name:"
@@ -76,7 +75,7 @@ msgstr "Barre de navigation :"
 
 #: ui/main_window.py:310 ui/dialogs/add_webapp_dialog.py:82
 msgid "Extra Parameters:"
-msgstr ""
+msgstr "Paramètres supplémentaires :"
 
 #: ui/main_window.py:344
 msgid "Are you sure you want to delete {}?"
@@ -96,7 +95,7 @@ msgstr "Catégorie :"
 
 #: ui/dialogs/add_webapp_dialog.py:81
 msgid "e.g. --start-maximized"
-msgstr ""
+msgstr "p. ex. --start-maximized"
 
 #~ msgid "Soplos WebApp Manager"
 #~ msgstr "Gestionnaire WebApp Soplos"

@@ -39,9 +39,8 @@ msgstr ""
 "Faceți clic pe butonul '+' pentru a adăuga unul."
 
 #: ui/main_window.py:213
-#, fuzzy
 msgid "Edit WebApp"
-msgstr "Adăugare WebApp"
+msgstr "Editează aplicația Web"
 
 #: ui/main_window.py:235 ui/dialogs/add_webapp_dialog.py:35
 msgid "Name:"
@@ -77,7 +76,7 @@ msgstr "Bară de navigare:"
 
 #: ui/main_window.py:310 ui/dialogs/add_webapp_dialog.py:82
 msgid "Extra Parameters:"
-msgstr ""
+msgstr "Parametri suplimentari:"
 
 #: ui/main_window.py:344
 msgid "Are you sure you want to delete {}?"
@@ -98,7 +97,7 @@ msgstr "Categorie:"
 
 #: ui/dialogs/add_webapp_dialog.py:81
 msgid "e.g. --start-maximized"
-msgstr ""
+msgstr "de ex. --start-maximized"
 
 #~ msgid "Soplos WebApp Manager"
 #~ msgstr "Manager WebApp Soplos"

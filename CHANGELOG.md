@@ -8,13 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 ## [1.0.0] - 2026-03-04
 
 ### 🎉 Initial Release
-- **Initial Launch** of Soplos WebApp Manager.
-- **Site Specific Browser (SSB)** creation using isolated browser profiles.
-- **Support for multiple engines**: Mozilla Firefox, Chromium, Google Chrome, Brave, Vivaldi, Microsoft Edge, and GNOME Web (Epiphany).
-- **Flatpak sandbox auto-detection** for isolated navigation.
-- **GTK 3 Interface**: Minimalist, native, and responsive UI fully compatible with X11 and Wayland.
+- **Full WebApp Editing**: Users can now edit Name, URL, Icon, Browser, and Navigation Bar settings for existing WebApps.
+- **Extra Browser Parameters**: Support for custom browser flags (e.g., `--start-maximized`, `--kiosk`) both at creation and editing.
+- **Improved Wayland Compatibility**: Enhanced icon mapping and window association for KDE Plasma 6 and other modern environments.
+- **Independent Firefox Instances**: Optimized Firefox SSB behavior with truly isolated processes and dedicated icons.
 - **Smart Favicons**: Fallback mechanism to natively download high-quality website icons via Google Favicons API.
-- **Firefox `userChrome.css` Customization**: Inject rules to hide Firefox toolbars out-of-the-box for a pure webapp experience.
 - **Full Internationalization (i18n)**: Translation ready for the 8 default languages in Soplos Linux.
 
 ---
