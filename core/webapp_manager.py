@@ -255,9 +255,6 @@ class WebAppManager:
         
         os.chmod(desktop_file, 0o755)
         
-        # Add Chrome compatibility symlink for KDE Plasma 6 Wayland
-        self._manage_chrome_compat_links(id_name, url, browser_id)
-        
         os.system("update-desktop-database ~/.local/share/applications 2>/dev/null")
         return True
 
@@ -316,9 +313,6 @@ X-Soplos-ExtraParams={extra_params}
             
         # Make the desktop file executable
         os.chmod(desktop_file, 0o755)
-        
-        # Add Chrome compatibility symlink for KDE Plasma 6 Wayland
-        self._manage_chrome_compat_links(id_name, url, browser_id)
         
         os.system("update-desktop-database ~/.local/share/applications 2>/dev/null")
         
