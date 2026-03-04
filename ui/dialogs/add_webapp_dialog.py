@@ -75,6 +75,12 @@ class AddWebAppDialog(Gtk.Dialog):
         self.switch_navbar.set_halign(Gtk.Align.START)
         grid.attach(Gtk.Label(label=self._("Navigation Bar:")), 0, 5, 1, 1)
         grid.attach(self.switch_navbar, 1, 5, 2, 1)
+
+        # Extra Parameters
+        self.entry_extra_params = Gtk.Entry()
+        self.entry_extra_params.set_placeholder_text(self._("e.g. --start-maximized"))
+        grid.attach(Gtk.Label(label=self._("Extra Parameters:")), 0, 6, 1, 1)
+        grid.attach(self.entry_extra_params, 1, 6, 2, 1)
         
         self.show_all()
 
@@ -130,5 +136,6 @@ class AddWebAppDialog(Gtk.Dialog):
             "icon": self.selected_icon_path or "applications-internet",
             "category": self.combo_category.get_active_id(),
             "browser": self.combo_browser.get_active_id(),
-            "show_navbar": self.switch_navbar.get_active()
+            "show_navbar": self.switch_navbar.get_active(),
+            "extra_params": self.entry_extra_params.get_text().strip()
         }

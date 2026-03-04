@@ -15,7 +15,7 @@ from .browser_manager import BrowserManager, Browser
 
 class WebApp:
     """Represents an installed WebApp."""
-    def __init__(self, id_name: str, name: str, url: str, browser_id: str, icon_path: str, desktop_file: str, profile_path: str, show_navbar: bool = False):
+    def __init__(self, id_name: str, name: str, url: str, browser_id: str, icon_path: str, desktop_file: str, profile_path: str, show_navbar: bool = False, extra_params: str = ""):
         self.id_name = id_name
         self.name = name
         self.url = url
@@ -24,6 +24,7 @@ class WebApp:
         self.desktop_file = desktop_file
         self.profile_path = profile_path
         self.show_navbar = show_navbar
+        self.extra_params = extra_params
 
 class WebAppManager:
     def __init__(self, browser_manager: BrowserManager):
@@ -74,7 +75,10 @@ class WebAppManager:
                     show_navbar_val = entry.get("X-Soplos-Navbar", "false")
                     show_navbar = show_navbar_val.lower() == "true"
                     
-                    webapps.append(WebApp(id_name, name, url, browser_id, icon, str(file), profile_path, show_navbar))
+                    # Read extra params from custom field
+                    extra_params = entry.get("X-Soplos-ExtraParams", "")
+                    
+                    webapps.append(WebApp(id_name, name, url, browser_id, icon, str(file), profile_path, show_navbar, extra_params))
             except Exception as e:
                 print(f"Error reading {file}: {e}")
                 
@@ -101,7 +105,7 @@ class WebAppManager:
         return success
 
     def update_webapp(self, id_name: str, new_name: str = None, new_icon: str = None, new_category: str = None, 
-                      new_url: str = None, new_browser_id: str = None, new_show_navbar: bool = None) -> bool:
+                      new_url: str = None, new_browser_id: str = None, new_show_navbar: bool = None, new_extra_params: str = None) -> bool:
         """Updates an existing webapp's .desktop file."""
         desktop_file = self.desktop_dir / f"soplos-webapp-{id_name}.desktop"
         if not desktop_file.exists():
@@ -160,6 +164,15 @@ class WebAppManager:
         url = new_url if new_url is not None else current_url
         browser_id = new_browser_id if new_browser_id is not None else current_browser_id
         
+        # Extra parameters
+        if new_extra_params is not None:
+            extra_params = new_extra_params
+        else:
+            extra_params = entry.get("X-Soplos-ExtraParams", "")
+            
+        # Save extra params state in custom field
+        entry["X-Soplos-ExtraParams"] = extra_params
+        
         # Determine show_navbar
         if new_show_navbar is not None:
             show_navbar = new_show_navbar
@@ -180,7 +193,7 @@ class WebAppManager:
                 profile_path = self.profiles_dir / id_name
                 if browser.id_name in ["firefox", "librewolf"]:
                     self._setup_firefox_profile(str(profile_path), show_navbar)
-                entry["Exec"] = browser.get_launch_command(url, str(profile_path), class_name, show_navbar)
+                entry["Exec"] = browser.get_launch_command(url, str(profile_path), class_name, show_navbar, extra_params)
         
         with open(desktop_file, 'w') as f:
             # IMPORTANT: space_around_delimiters=False for .desktop compliance
@@ -192,7 +205,7 @@ class WebAppManager:
         return True
 
 
-    def create_webapp(self, name: str, url: str, icon_path: str, category: str, browser_id: str, show_navbar: bool = False) -> Optional[WebApp]:
+    def create_webapp(self, name: str, url: str, icon_path: str, category: str, browser_id: str, show_navbar: bool = False, extra_params: str = "") -> Optional[WebApp]:
         """Creates a new webapp."""
         browser = self.browser_manager.get_browser(browser_id)
         if not browser:
@@ -229,6 +242,7 @@ Categories={category};
 StartupWMClass={class_name}
 StartupNotify=true
 X-Soplos-Navbar={"true" if show_navbar else "false"}
+X-Soplos-ExtraParams={extra_params}
 """
 
         

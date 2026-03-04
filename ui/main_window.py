@@ -201,7 +201,8 @@ class MainWindow(Gtk.ApplicationWindow):
                     data['icon'], 
                     data['category'], 
                     data['browser'],
-                    data['show_navbar']
+                    data['show_navbar'],
+                    data['extra_params']
                 )
                 self.load_webapps()
         dialog.destroy()
@@ -217,7 +218,7 @@ class MainWindow(Gtk.ApplicationWindow):
             Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
             Gtk.STOCK_OK, Gtk.ResponseType.OK
         )
-        dialog.set_default_size(450, 400)
+        dialog.set_default_size(450, 450)
         dialog.set_border_width(10)
         
         box = dialog.get_content_area()
@@ -302,6 +303,12 @@ class MainWindow(Gtk.ApplicationWindow):
         switch_navbar.set_halign(Gtk.Align.START)
         grid.attach(Gtk.Label(label=self._("Navigation Bar:")), 0, 4, 1, 1)
         grid.attach(switch_navbar, 1, 4, 2, 1)
+
+        # Extra Parameters
+        entry_extra_params = Gtk.Entry()
+        entry_extra_params.set_text(wa.extra_params)
+        grid.attach(Gtk.Label(label=self._("Extra Parameters:")), 0, 5, 1, 1)
+        grid.attach(entry_extra_params, 1, 5, 2, 1)
         
         dialog.show_all()
         response = dialog.run()
@@ -312,6 +319,7 @@ class MainWindow(Gtk.ApplicationWindow):
             new_icon = selected_icon[0]
             new_browser_id = combo_browser.get_active_id()
             new_show_navbar = switch_navbar.get_active()
+            new_extra_params = entry_extra_params.get_text().strip()
             
             self.webapp_manager.update_webapp(
                 wa.id_name,
@@ -319,7 +327,8 @@ class MainWindow(Gtk.ApplicationWindow):
                 new_icon=new_icon,
                 new_url=new_url,
                 new_browser_id=new_browser_id,
-                new_show_navbar=new_show_navbar
+                new_show_navbar=new_show_navbar,
+                new_extra_params=new_extra_params
             )
             self.load_webapps()
         

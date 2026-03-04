@@ -17,7 +17,7 @@ class Browser:
         self.is_flatpak = is_flatpak
         self.flatpak_id = flatpak_id
 
-    def get_launch_command(self, url: str, profile_path: str, class_name: str, show_navbar: bool = False) -> str:
+    def get_launch_command(self, url: str, profile_path: str, class_name: str, show_navbar: bool = False, extra_params: str = "") -> str:
         """
         Generate the Exec command for the .desktop file.
         """
@@ -32,9 +32,12 @@ class Browser:
         if self.id_name in ["chromium", "chrome", "brave", "vivaldi", "edge"]:
             cmd.append(f"--app={url}")
             cmd.append(f"--user-data-dir={profile_path}")
-            # Set both class and name for maximum compatibility with task managers
+            # Force ozone platform hint for better Wayland support
+            cmd.append("--ozone-platform-hint=auto")
+            # Set class, name and wm-class for maximum compatibility with task managers
             cmd.append(f"--class={class_name}")
             cmd.append(f"--name={class_name}")
+            cmd.append(f"--wm-class={class_name}")
             # Wayland specific app-id support
             cmd.append(f"--wayland-app-id={class_name}")
             
@@ -58,6 +61,10 @@ class Browser:
             cmd.append("--application-mode")
             cmd.append(f"--profile={profile_path}")
             cmd.append(url)
+
+        # Append extra parameters if any
+        if extra_params:
+            cmd.append(extra_params)
             
         return " ".join(cmd)
 
