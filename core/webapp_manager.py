@@ -9,7 +9,8 @@ import shutil
 import uuid
 import configparser
 from pathlib import Path
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
+from urllib.parse import urlparse
 
 from .browser_manager import BrowserManager, Browser
 
@@ -97,12 +98,50 @@ class WebAppManager:
             success = False
             
         try:
+            # Also cleanup any compatibility symlinks
+            for sym in self.desktop_dir.glob("chrome-*.desktop"):
+                if sym.is_symlink() and str(sym.readlink()).endswith(f"soplos-webapp-{id_name}.desktop"):
+                    sym.unlink()
+                    
             if profile_dir.exists():
                 shutil.rmtree(profile_dir)
         except:
             success = False
             
         return success
+
+    def _manage_chrome_compat_links(self, id_name: str, url: str, browser_id: str):
+        """
+        KDE Plasma 6 (Wayland) often ignores --wayland-app-id and looks for a .desktop
+        matching an internal ID like 'chrome-host.com__-Default'.
+        We create a symlink with that name pointing to our soplos-webapp-*.desktop.
+        """
+        # Only for Chrome-based browsers
+        if browser_id not in ["chrome", "chromium", "brave", "vivaldi", "edge"]:
+            return
+            
+        try:
+            parsed = urlparse(url)
+            host = parsed.netloc
+            if not host:
+                return
+                
+            # Remove any existing symlinks for this specific webapp first
+            for sym in self.desktop_dir.glob("chrome-*.desktop"):
+                if sym.is_symlink() and str(sym.readlink()).endswith(f"soplos-webapp-{id_name}.desktop"):
+                    sym.unlink()
+                    
+            # Create the link KWin expects: chrome-{host}__-Default.desktop
+            # Based on user's dbus-send: "chrome-web.whatsapp.com__-Default"
+            compat_name = f"chrome-{host}__-Default.desktop"
+            target_name = f"soplos-webapp-{id_name}.desktop"
+            compat_path = self.desktop_dir / compat_name
+            target_path = self.desktop_dir / target_name
+            
+            if target_path.exists() and not compat_path.exists():
+                os.symlink(target_path.name, compat_path)
+        except Exception as e:
+            print(f"Error creating compatibility symlink: {e}")
 
     def update_webapp(self, id_name: str, new_name: str = None, new_icon: str = None, new_category: str = None, 
                       new_url: str = None, new_browser_id: str = None, new_show_navbar: bool = None, new_extra_params: str = None) -> bool:
@@ -200,7 +239,10 @@ class WebAppManager:
             config.write(f, space_around_delimiters=False)
         
         os.chmod(desktop_file, 0o755)
-        # Notify system of desktop entry change
+        
+        # Add Chrome compatibility symlink for KDE Plasma 6 Wayland
+        self._manage_chrome_compat_links(id_name, url, browser_id)
+        
         os.system("update-desktop-database ~/.local/share/applications 2>/dev/null")
         return True
 
@@ -225,7 +267,7 @@ class WebAppManager:
             self._setup_firefox_profile(str(profile_path), show_navbar)
             
         class_name = f"soplos-webapp-{id_name}"
-        exec_cmd = browser.get_launch_command(url, str(profile_path), class_name, show_navbar)
+        exec_cmd = browser.get_launch_command(url, str(profile_path), class_name, show_navbar, extra_params)
         
         desktop_file = self.desktop_dir / f"soplos-webapp-{id_name}.desktop"
         
@@ -252,7 +294,12 @@ X-Soplos-ExtraParams={extra_params}
         # Make the desktop file executable
         os.chmod(desktop_file, 0o755)
         
-        return WebApp(id_name, name, url, browser_id, icon_path, str(desktop_file), str(profile_path))
+        # Add Chrome compatibility symlink for KDE Plasma 6 Wayland
+        self._manage_chrome_compat_links(id_name, url, browser_id)
+        
+        os.system("update-desktop-database ~/.local/share/applications 2>/dev/null")
+        
+        return WebApp(id_name, name, url, browser_id, icon_path, str(desktop_file), str(profile_path), show_navbar, extra_params)
 
     def _setup_firefox_profile(self, profile_path: str, show_navbar: bool):
         """Creates user.js and userChrome.css to strip UI from Firefox."""
