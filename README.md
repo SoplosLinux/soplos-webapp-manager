@@ -1,6 +1,6 @@
 # Soplos WebApp Manager
 
-![Soplos WebApp Manager Icon](assets/icons/128x128/soplos-webapp-manager.png)
+![Soplos WebApp Manager Icon](assets/icons/128x128/org.soplos.webappmanager.png)
 
 **Soplos WebApp Manager** is an elegant, lightweight Site Specific Browser (SSB) engine tailored for Soplos Linux. It effortlessly turns any website into a standalone, desktop-integrated application utilizing isolated browser profiles for maximum privacy and separation from your primary web session.
 
