@@ -33,17 +33,18 @@ class Browser:
             # Set environment variable for desktop integration (used by KDE/GNOME to map windows)
             cmd.insert(0, f"env CHROME_DESKTOP={class_name}.desktop")
             
-            # Identity and platform flags FIRST: if they come after --app they might be ignored
-            # Force native Wayland mode more aggressively
-            cmd.append("--enable-features=UseOzonePlatform")
-            cmd.append("--ozone-platform=wayland")
-            
+            # Platform and identity hints
+            cmd.append("--ozone-platform-hint=auto")
             cmd.append(f"--wayland-app-id={class_name}")
-            cmd.append(f"--app-name={class_name}")
             cmd.append(f"--class={class_name}")
             cmd.append(f"--name={class_name}")
             cmd.append(f"--wm-class={class_name}")
             cmd.append(f"--user-data-dir={profile_path}")
+            
+            # Append extra parameters BEFORE the --app flag to ensure they are parsed
+            if extra_params:
+                cmd.append(extra_params)
+                
             cmd.append(f"--app={url}")
             
         # Firefox based
@@ -59,17 +60,22 @@ class Browser:
             cmd.append(class_name)
             cmd.append("-name")
             cmd.append(class_name)
+            
+            # Append extra parameters before the URL
+            if extra_params:
+                cmd.append(extra_params)
+                
             cmd.append(url)
             
         # WebKit based (Epiphany)
         elif self.id_name == "epiphany":
             cmd.append("--application-mode")
             cmd.append(f"--profile={profile_path}")
+            
+            if extra_params:
+                cmd.append(extra_params)
+                
             cmd.append(url)
-
-        # Append extra parameters if any
-        if extra_params:
-            cmd.append(extra_params)
             
         return " ".join(cmd)
 
