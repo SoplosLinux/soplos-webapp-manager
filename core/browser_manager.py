@@ -17,7 +17,7 @@ class Browser:
         self.is_flatpak = is_flatpak
         self.flatpak_id = flatpak_id
 
-    def get_launch_command(self, url: str, profile_path: str, class_name: str, show_navbar: bool = False, extra_params: str = "") -> str:
+    def get_launch_command(self, url: str, profile_path: str, class_name: str, show_navbar: bool = False, extra_params: str = "", is_incognito: bool = False) -> str:
         """
         Generate the Exec command for the .desktop file.
         """
@@ -41,6 +41,9 @@ class Browser:
             cmd.append(f"--wm-class={class_name}")
             cmd.append(f"--user-data-dir={profile_path}")
             
+            if is_incognito:
+                cmd.append("--incognito")
+                
             # Append extra parameters BEFORE the --app flag to ensure they are parsed
             if extra_params:
                 cmd.append(extra_params)
@@ -61,6 +64,9 @@ class Browser:
             cmd.append("-name")
             cmd.append(class_name)
             
+            if is_incognito:
+                cmd.append("-private-window")
+                
             # Append extra parameters before the URL
             if extra_params:
                 cmd.append(extra_params)
@@ -72,6 +78,9 @@ class Browser:
             cmd.append("--application-mode")
             cmd.append(f"--profile={profile_path}")
             
+            if is_incognito:
+                cmd.append("--incognito-mode")
+                
             if extra_params:
                 cmd.append(extra_params)
                 

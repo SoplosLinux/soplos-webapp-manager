@@ -16,11 +16,11 @@
 
 - 🌐 **Multi-Engine Support**: Native or Flatpak versions of Firefox, Chrome, Chromium, Brave, Vivaldi, Edge, and Epiphany.
 - ✏️ **Full WebApp Editing**: Reconfigure Name, URL, Icon, and Browser settings at any time without recreating the profile.
-- ⚙️ **Extra Browser Parameters**: Add custom flags like `--start-maximized` or `--kiosk` to your webapps.
-- 🔒 **Total Isolation**: Generates sandboxed `~/.local/share/soplos-webapps/` profiles avoiding cookie crossover.
-- 🎨 **Minimalist Integration**: Built on GTK3, automatically adopting systemic Dark/Light themes under X11 or Wayland.
-- 🧩 **No-UI Implementation**: Features a customized Firefox launch using `userChrome.css` and a dynamic StartupWMClass mapping for Wayland/KDE 6 icons.
-- 🤖 **Smart Favicons**: HD icons automatically downloaded via Google Favicon API if local ones aren't provided. 
+- ⚙️ **Extra Browser Parameters**: Add custom flags like `--start-maximized` or `--kiosk` with a new built-in help guide.
+- 🔒 **Total Isolation & Incognito**: Generates sandboxed profiles and supports Incognito mode sessions.
+- 🎨 **Soplos UI Integration**: Official status bar with automatic detection of DE (GNOME/Plasma/XFCE) and protocol (Wayland/X11).
+- 🧩 **No-UI Implementation**: Customized Firefox launch using `userChrome.css` and dynamic StartupWMClass mapping.
+- 🤖 **Smart Favicons**: HD icons automatically downloaded via Google Favicon API. 
 - 🌍 **Internationalization**: Ships translated out-of-the-box for `es, en, fr, de, pt, it, ro, ru`.
 
 ## Requirements

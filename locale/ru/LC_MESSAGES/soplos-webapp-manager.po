@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-04 15:32+0100\n"
+"POT-Creation-Date: 2026-03-10 16:10+0100\n"
 "PO-Revision-Date: 2026-03-04 13:00+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -54,11 +54,11 @@ msgstr "Веб-адрес:"
 msgid "Select Icon"
 msgstr "Выбрать значок"
 
-#: ui/main_window.py:259 ui/dialogs/add_webapp_dialog.py:103
+#: ui/main_window.py:259 ui/dialogs/add_webapp_dialog.py:143
 msgid "Select an icon"
 msgstr "Выберите значок"
 
-#: ui/main_window.py:268 ui/dialogs/add_webapp_dialog.py:113
+#: ui/main_window.py:268 ui/dialogs/add_webapp_dialog.py:153
 msgid "Images (PNG, SVG, JPG)"
 msgstr "Изображения (PNG, SVG, JPG)"
 
@@ -74,15 +74,68 @@ msgstr "Браузер:"
 msgid "Navigation Bar:"
 msgstr "Панель навигации:"
 
-#: ui/main_window.py:310 ui/dialogs/add_webapp_dialog.py:82
+#: ui/main_window.py:311 ui/dialogs/add_webapp_dialog.py:83
+msgid "Incognito Mode:"
+msgstr "Режим инкогнито:"
+
+#: ui/main_window.py:317 ui/dialogs/add_webapp_dialog.py:89
 msgid "Extra Parameters:"
 msgstr "Дополнительные параметры:"
 
-#: ui/main_window.py:344
+#: ui/main_window.py:324 ui/dialogs/add_webapp_dialog.py:96
+msgid "Common Parameters Help"
+msgstr "Справка по общим параметрам"
+
+#: ui/main_window.py:327 ui/dialogs/add_webapp_dialog.py:106
+msgid "Forces the WebApp to occupy the full screen at startup."
+msgstr "Принудительно разворачивает веб-приложение на весь экран при запуске."
+
+#: ui/main_window.py:328 ui/dialogs/add_webapp_dialog.py:107
+msgid ""
+"Prevents floating bubbles when hovering over tabs (very useful in WebApp "
+"mode)."
+msgstr ""
+"Предотвращает появление всплывающих подсказок при наведении на вкладки "
+"(очень полезно в режиме веб-приложения)."
+
+#: ui/main_window.py:329 ui/dialogs/add_webapp_dialog.py:108
+msgid ""
+"Forces the website to render in dark mode, even if not natively supported."
+msgstr ""
+"Принудительно отрисовывает сайт в темном режиме, даже если он не "
+"поддерживается нативно."
+
+#: ui/main_window.py:330 ui/dialogs/add_webapp_dialog.py:109
+msgid "Simulate a different browser or device."
+msgstr "Симулирует другой браузер или устройство."
+
+#: ui/main_window.py:331 ui/dialogs/add_webapp_dialog.py:110
+msgid "Use a specific proxy for this WebApp."
+msgstr "Использует определенный прокси для этого веб-приложения."
+
+#: ui/main_window.py:332 ui/dialogs/add_webapp_dialog.py:111
+msgid "Set a fixed window size."
+msgstr "Устанавливает фиксированный размер окна."
+
+#: ui/main_window.py:333 ui/dialogs/add_webapp_dialog.py:112
+msgid "Disable all website notifications."
+msgstr "Отключает все уведомления сайта."
+
+#: ui/main_window.py:334 ui/dialogs/add_webapp_dialog.py:113
+msgid "Increase shared memory (useful for heavy apps in containers)."
+msgstr ""
+"Увеличивает объем общей памяти (полезно для тяжелых приложений в "
+"контейнерах)."
+
+#: ui/main_window.py:341 ui/dialogs/add_webapp_dialog.py:121
+msgid "Browser Parameters Help"
+msgstr "Справка по параметрам браузера"
+
+#: ui/main_window.py:385
 msgid "Are you sure you want to delete {}?"
 msgstr "Вы уверены, что хотите удалить {}?"
 
-#: ui/main_window.py:346
+#: ui/main_window.py:387
 msgid "This will remove its .desktop file and the isolated browser profile."
 msgstr ""
 "Это приведет к удалению его файла .desktop и изолированного профиля браузера."
@@ -95,7 +148,7 @@ msgstr "напр. YouTube"
 msgid "Category:"
 msgstr "Категория:"
 
-#: ui/dialogs/add_webapp_dialog.py:81
+#: ui/dialogs/add_webapp_dialog.py:88
 msgid "e.g. --start-maximized"
 msgstr "напр. --start-maximized"
 

@@ -32,6 +32,8 @@ except FileNotFoundError:
 
 from core.browser_manager import BrowserManager
 from core.webapp_manager import WebAppManager
+from ui.main_window import MainWindow
+from utils.environment import get_environment_detector
 
 
 class SoplosWebAppManagerApplication(Gtk.Application):
@@ -44,11 +46,15 @@ class SoplosWebAppManagerApplication(Gtk.Application):
         )
         self.app_path = PROJECT_ROOT
         self.assets_path = ASSETS_DIR
-        self.main_window = None
+        self.window = None # Changed from self.main_window
         
+        # Connect signals
         self.connect('startup', self.on_startup)
-        self.connect('activate', self.on_activate)
-        self.connect('shutdown', self.on_shutdown)
+        self.connect("activate", self.on_activate)
+        self.connect("shutdown", self.on_shutdown)
+        
+        # Initialize environment detector
+        self.environment_detector = get_environment_detector()
         
         signal.signal(signal.SIGINT, self._handle_signal)
         signal.signal(signal.SIGTERM, self._handle_signal)
@@ -62,13 +68,14 @@ class SoplosWebAppManagerApplication(Gtk.Application):
         self.webapp_manager = WebAppManager(self.browser_manager)
     
     def on_activate(self, app):
-        if self.main_window:
-            self.main_window.present()
+        if self.window: # Changed from self.main_window
+            self.window.present() # Changed from self.main_window
             return
             
-        from ui.main_window import MainWindow
-        self.main_window = MainWindow(self, self.browser_manager, self.webapp_manager, _, self.assets_path)
-        self.main_window.show_all()
+        # from ui.main_window import MainWindow # This line is removed as it's now a top-level import
+        if not self.window:
+            self.window = MainWindow(self, self.browser_manager, self.webapp_manager, self.environment_detector, _, self.assets_path)
+            self.window.show_all()
     
     def on_shutdown(self, app):
         print("Shutting down Soplos WebApp Manager...")

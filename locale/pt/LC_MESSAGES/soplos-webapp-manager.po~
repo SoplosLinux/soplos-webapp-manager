@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-04 13:00+0100\n"
+"POT-Creation-Date: 2026-03-04 15:32+0100\n"
 "PO-Revision-Date: 2026-03-04 13:00+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,63 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: main.py:39
+#: main.py:60
 msgid "Starting Soplos WebApp Manager..."
 msgstr "Iniciando o Gerenciador de WebApps Soplos..."
 
-#: ui/dialogs/add_webapp_dialog.py:11 ui/main_window.py:107
+#: ui/main_window.py:118
 msgid "Add WebApp"
 msgstr "Adicionar WebApp"
 
-#: ui/dialogs/add_webapp_dialog.py:34
-msgid "e.g. YouTube"
-msgstr "ex. YouTube"
-
-#: ui/dialogs/add_webapp_dialog.py:35
-msgid "Name:"
-msgstr "Nome:"
-
-#: ui/dialogs/add_webapp_dialog.py:42
-msgid "Web Address:"
-msgstr "Endereço Web:"
-
-#: ui/dialogs/add_webapp_dialog.py:47
-msgid "Select Icon"
-msgstr "Selecionar Ícone"
-
-#: ui/dialogs/add_webapp_dialog.py:49
-msgid "Icon:"
-msgstr "Ícone:"
-
-#: ui/dialogs/add_webapp_dialog.py:59
-msgid "Category:"
-msgstr "Categoria:"
-
-#: ui/dialogs/add_webapp_dialog.py:69
-msgid "Browser:"
-msgstr "Navegador:"
-
-#: ui/dialogs/add_webapp_dialog.py:76
-msgid "Navigation Bar:"
-msgstr "Barra de Navegação:"
-
-#: ui/dialogs/add_webapp_dialog.py:97
-msgid "Select an icon"
-msgstr "Selecione um ícone"
-
-#: ui/dialogs/add_webapp_dialog.py:107
-msgid "Images (PNG, SVG, JPG)"
-msgstr "Imagens (PNG, SVG, JPG)"
-
-#: ui/main_window.py:78
-msgid "Soplos WebApp Manager"
-msgstr "Gerenciador de WebApps Soplos"
-
-#: ui/main_window.py:114
+#: ui/main_window.py:125
 msgid "Remove WebApp"
 msgstr "Remover WebApp"
 
-#: ui/main_window.py:138
+#: ui/main_window.py:150
 msgid ""
 "No WebApps installed.\n"
 "Click the '+' button to add one."
@@ -81,10 +37,65 @@ msgstr ""
 "Nenhum WebApp instalado.\n"
 "Clique no botão '+' para adicionar um."
 
-#: ui/main_window.py:207
+#: ui/main_window.py:213
+msgid "Edit WebApp"
+msgstr "Editar WebApp"
+
+#: ui/main_window.py:235 ui/dialogs/add_webapp_dialog.py:35
+msgid "Name:"
+msgstr "Nome:"
+
+#: ui/main_window.py:241 ui/dialogs/add_webapp_dialog.py:42
+msgid "Web Address:"
+msgstr "Endereço Web:"
+
+#: ui/main_window.py:256 ui/dialogs/add_webapp_dialog.py:47
+msgid "Select Icon"
+msgstr "Selecionar Ícone"
+
+#: ui/main_window.py:259 ui/dialogs/add_webapp_dialog.py:103
+msgid "Select an icon"
+msgstr "Selecione um ícone"
+
+#: ui/main_window.py:268 ui/dialogs/add_webapp_dialog.py:113
+msgid "Images (PNG, SVG, JPG)"
+msgstr "Imagens (PNG, SVG, JPG)"
+
+#: ui/main_window.py:284 ui/dialogs/add_webapp_dialog.py:49
+msgid "Icon:"
+msgstr "Ícone:"
+
+#: ui/main_window.py:297 ui/dialogs/add_webapp_dialog.py:69
+msgid "Browser:"
+msgstr "Navegador:"
+
+#: ui/main_window.py:304 ui/dialogs/add_webapp_dialog.py:76
+msgid "Navigation Bar:"
+msgstr "Barra de Navegação:"
+
+#: ui/main_window.py:310 ui/dialogs/add_webapp_dialog.py:82
+msgid "Extra Parameters:"
+msgstr "Parâmetros extras:"
+
+#: ui/main_window.py:344
 msgid "Are you sure you want to delete {}?"
 msgstr "Tem certeza que deseja excluir {}?"
 
-#: ui/main_window.py:209
+#: ui/main_window.py:346
 msgid "This will remove its .desktop file and the isolated browser profile."
 msgstr "Isso removerá seu arquivo .desktop e o perfil de navegador isolado."
+
+#: ui/dialogs/add_webapp_dialog.py:34
+msgid "e.g. YouTube"
+msgstr "ex. YouTube"
+
+#: ui/dialogs/add_webapp_dialog.py:59
+msgid "Category:"
+msgstr "Categoria:"
+
+#: ui/dialogs/add_webapp_dialog.py:81
+msgid "e.g. --start-maximized"
+msgstr "ex. --start-maximized"
+
+#~ msgid "Soplos WebApp Manager"
+#~ msgstr "Gerenciador de WebApps Soplos"

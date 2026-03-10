@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-04 15:32+0100\n"
+"POT-Creation-Date: 2026-03-10 16:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,11 +51,11 @@ msgstr ""
 msgid "Select Icon"
 msgstr ""
 
-#: ui/main_window.py:259 ui/dialogs/add_webapp_dialog.py:103
+#: ui/main_window.py:259 ui/dialogs/add_webapp_dialog.py:143
 msgid "Select an icon"
 msgstr ""
 
-#: ui/main_window.py:268 ui/dialogs/add_webapp_dialog.py:113
+#: ui/main_window.py:268 ui/dialogs/add_webapp_dialog.py:153
 msgid "Images (PNG, SVG, JPG)"
 msgstr ""
 
@@ -71,15 +71,62 @@ msgstr ""
 msgid "Navigation Bar:"
 msgstr ""
 
-#: ui/main_window.py:310 ui/dialogs/add_webapp_dialog.py:82
+#: ui/main_window.py:311 ui/dialogs/add_webapp_dialog.py:83
+msgid "Incognito Mode:"
+msgstr ""
+
+#: ui/main_window.py:317 ui/dialogs/add_webapp_dialog.py:89
 msgid "Extra Parameters:"
 msgstr ""
 
-#: ui/main_window.py:344
+#: ui/main_window.py:324 ui/dialogs/add_webapp_dialog.py:96
+msgid "Common Parameters Help"
+msgstr ""
+
+#: ui/main_window.py:327 ui/dialogs/add_webapp_dialog.py:106
+msgid "Forces the WebApp to occupy the full screen at startup."
+msgstr ""
+
+#: ui/main_window.py:328 ui/dialogs/add_webapp_dialog.py:107
+msgid ""
+"Prevents floating bubbles when hovering over tabs (very useful in WebApp "
+"mode)."
+msgstr ""
+
+#: ui/main_window.py:329 ui/dialogs/add_webapp_dialog.py:108
+msgid ""
+"Forces the website to render in dark mode, even if not natively supported."
+msgstr ""
+
+#: ui/main_window.py:330 ui/dialogs/add_webapp_dialog.py:109
+msgid "Simulate a different browser or device."
+msgstr ""
+
+#: ui/main_window.py:331 ui/dialogs/add_webapp_dialog.py:110
+msgid "Use a specific proxy for this WebApp."
+msgstr ""
+
+#: ui/main_window.py:332 ui/dialogs/add_webapp_dialog.py:111
+msgid "Set a fixed window size."
+msgstr ""
+
+#: ui/main_window.py:333 ui/dialogs/add_webapp_dialog.py:112
+msgid "Disable all website notifications."
+msgstr ""
+
+#: ui/main_window.py:334 ui/dialogs/add_webapp_dialog.py:113
+msgid "Increase shared memory (useful for heavy apps in containers)."
+msgstr ""
+
+#: ui/main_window.py:341 ui/dialogs/add_webapp_dialog.py:121
+msgid "Browser Parameters Help"
+msgstr ""
+
+#: ui/main_window.py:385
 msgid "Are you sure you want to delete {}?"
 msgstr ""
 
-#: ui/main_window.py:346
+#: ui/main_window.py:387
 msgid "This will remove its .desktop file and the isolated browser profile."
 msgstr ""
 
@@ -91,6 +138,6 @@ msgstr ""
 msgid "Category:"
 msgstr ""
 
-#: ui/dialogs/add_webapp_dialog.py:81
+#: ui/dialogs/add_webapp_dialog.py:88
 msgid "e.g. --start-maximized"
 msgstr ""

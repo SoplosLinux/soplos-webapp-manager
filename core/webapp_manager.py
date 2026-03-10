@@ -16,7 +16,7 @@ from .browser_manager import BrowserManager, Browser
 
 class WebApp:
     """Represents an installed WebApp."""
-    def __init__(self, id_name: str, name: str, url: str, browser_id: str, icon_path: str, desktop_file: str, profile_path: str, show_navbar: bool = False, extra_params: str = ""):
+    def __init__(self, id_name: str, name: str, url: str, browser_id: str, icon_path: str, desktop_file: str, profile_path: str, show_navbar: bool = False, extra_params: str = "", is_incognito: bool = False):
         self.id_name = id_name
         self.name = name
         self.url = url
@@ -26,6 +26,7 @@ class WebApp:
         self.profile_path = profile_path
         self.show_navbar = show_navbar
         self.extra_params = extra_params
+        self.is_incognito = is_incognito
 
 class WebAppManager:
     def __init__(self, browser_manager: BrowserManager):
@@ -79,7 +80,11 @@ class WebAppManager:
                     # Read extra params from custom field
                     extra_params = entry.get("X-Soplos-ExtraParams", "")
                     
-                    webapps.append(WebApp(id_name, name, url, browser_id, icon, str(file), profile_path, show_navbar, extra_params))
+                    # Read incognito state from custom field
+                    is_incognito_val = entry.get("X-Soplos-Incognito", "false")
+                    is_incognito = is_incognito_val.lower() == "true"
+                    
+                    webapps.append(WebApp(id_name, name, url, browser_id, icon, str(file), profile_path, show_navbar, extra_params, is_incognito))
             except Exception as e:
                 print(f"Error reading {file}: {e}")
                 
@@ -153,7 +158,8 @@ class WebAppManager:
             print(f"Error creating compatibility symlink: {e}")
 
     def update_webapp(self, id_name: str, new_name: str = None, new_icon: str = None, new_category: str = None, 
-                      new_url: str = None, new_browser_id: str = None, new_show_navbar: bool = None, new_extra_params: str = None) -> bool:
+                      new_url: str = None, new_browser_id: str = None, new_show_navbar: bool = None, 
+                      new_extra_params: str = None, new_is_incognito: bool = None) -> bool:
         """Updates an existing webapp's .desktop file."""
         desktop_file = self.desktop_dir / f"soplos-webapp-{id_name}.desktop"
         if not desktop_file.exists():
@@ -239,6 +245,16 @@ class WebAppManager:
         
         # Save navbar state in custom field
         entry["X-Soplos-Navbar"] = "true" if show_navbar else "false"
+        
+        # Determine is_incognito
+        if new_is_incognito is not None:
+            is_incognito = new_is_incognito
+        else:
+            is_incognito_val = entry.get("X-Soplos-Incognito", "false")
+            is_incognito = is_incognito_val.lower() == "true"
+            
+        # Save incognito state in custom field
+        entry["X-Soplos-Incognito"] = "true" if is_incognito else "false"
             
         if url and browser_id != "unknown":
             browser = self.browser_manager.get_browser(browser_id)
@@ -247,7 +263,7 @@ class WebAppManager:
                 class_name = f"soplos-webapp-{id_name}"
                 if browser.id_name in ["firefox", "librewolf"]:
                     self._setup_firefox_profile(str(profile_path), show_navbar)
-                entry["Exec"] = browser.get_launch_command(url, str(profile_path), class_name, show_navbar, extra_params)
+                entry["Exec"] = browser.get_launch_command(url, str(profile_path), class_name, show_navbar, extra_params, is_incognito)
         
         with open(desktop_file, 'w') as f:
             # IMPORTANT: space_around_delimiters=False for .desktop compliance
@@ -259,7 +275,8 @@ class WebAppManager:
         return True
 
 
-    def create_webapp(self, name: str, url: str, icon_path: str, category: str, browser_id: str, show_navbar: bool = False, extra_params: str = "") -> Optional[WebApp]:
+    def create_webapp(self, name: str, url: str, icon_path: str, category: str, browser_id: str, 
+                      show_navbar: bool = False, extra_params: str = "", is_incognito: bool = False) -> Optional[WebApp]:
         """Creates a new webapp."""
         browser = self.browser_manager.get_browser(browser_id)
         if not browser:
@@ -287,7 +304,7 @@ class WebAppManager:
         else:
             startup_class = class_name
             
-        exec_cmd = browser.get_launch_command(url, str(profile_path), class_name, show_navbar, extra_params)
+        exec_cmd = browser.get_launch_command(url, str(profile_path), class_name, show_navbar, extra_params, is_incognito)
         
         desktop_file = self.desktop_dir / f"soplos-webapp-{id_name}.desktop"
         
@@ -305,6 +322,7 @@ StartupWMClass={startup_class}
 StartupNotify=true
 X-Soplos-Navbar={"true" if show_navbar else "false"}
 X-Soplos-ExtraParams={extra_params}
+X-Soplos-Incognito={"true" if is_incognito else "false"}
 """
 
         
@@ -316,7 +334,7 @@ X-Soplos-ExtraParams={extra_params}
         
         os.system("update-desktop-database ~/.local/share/applications 2>/dev/null")
         
-        return WebApp(id_name, name, url, browser_id, icon_path, str(desktop_file), str(profile_path), show_navbar, extra_params)
+        return WebApp(id_name, name, url, browser_id, icon_path, str(desktop_file), str(profile_path), show_navbar, extra_params, is_incognito)
 
     def _setup_firefox_profile(self, profile_path: str, show_navbar: bool):
         """Creates user.js and userChrome.css to strip UI from Firefox."""

@@ -4,8 +4,10 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GdkPixbuf, Gdk, Gio
 from pathlib import Path
 
-from core.browser_manager import BrowserManager
-from core.webapp_manager import WebAppManager
+from core.browser_manager import BrowserManager, Browser
+from core.webapp_manager import WebAppManager, WebApp
+from config.constants import APP_NAME, APP_VERSION
+
 from ui.dialogs.add_webapp_dialog import AddWebAppDialog
 
 
@@ -83,10 +85,12 @@ class WebAppRow(Gtk.ListBoxRow):
 
 
 class MainWindow(Gtk.ApplicationWindow):
-    def __init__(self, application, browser_manager: BrowserManager, webapp_manager: WebAppManager, _translate, assets_dir):
-        super().__init__(application=application, title=_translate("Soplos WebApp Manager"))
+    """Main Application Window."""
+    def __init__(self, app, browser_manager: BrowserManager, webapp_manager: WebAppManager, environment_detector, _translate, assets_dir):
+        super().__init__(application=app, title=_translate(APP_NAME))
         self.browser_manager = browser_manager
         self.webapp_manager = webapp_manager
+        self.environment_detector = environment_detector
         self._ = _translate
         self.assets_dir = Path(assets_dir) if assets_dir else None
         
@@ -165,7 +169,62 @@ class MainWindow(Gtk.ApplicationWindow):
         scrolled.add(self.listbox)
         
         self.stack.add_named(scrolled, "list")
+
+        # Status bar at bottom
+        self._create_status_bar(vbox)
+
+    def _create_status_bar(self, main_vbox):
+        """Create a clean status bar with system info and version."""
+        status_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        status_box.set_margin_start(15)
+        status_box.set_margin_end(15)
+        status_box.set_margin_top(8)
+        status_box.set_margin_bottom(8)
         
+        # Left side: System info
+        env_info = self.environment_detector.detect_all()
+        desktop_name = self._translate_desktop_name(env_info['desktop_environment'])
+        protocol_name = self._translate_protocol_name(env_info['display_protocol'])
+        
+        status_text = self._("Ready - {desktop} on {protocol}").format(
+            desktop=desktop_name,
+            protocol=protocol_name
+        )
+        
+        self.status_label = Gtk.Label(label=status_text)
+        self.status_label.set_halign(Gtk.Align.START)
+        self.status_label.get_style_context().add_class('status-label')
+        status_box.pack_start(self.status_label, False, False, 0)
+        
+        # Right side: Version info
+        version_text = f"{APP_NAME} v{APP_VERSION}"
+        version_label = Gtk.Label(label=version_text)
+        version_label.set_halign(Gtk.Align.END)
+        version_label.get_style_context().add_class('dim-label')
+        status_box.pack_end(version_label, False, False, 0)
+        
+        main_vbox.pack_start(status_box, False, False, 0)
+
+    def _translate_desktop_name(self, desktop_env):
+        """Translate desktop environment name."""
+        desktop_map = {
+            'gnome': self._("GNOME"),
+            'kde': self._("KDE Plasma"),
+            'plasma': self._("KDE Plasma"),
+            'xfce': self._("XFCE"),
+            'unknown': self._("Unknown")
+        }
+        return desktop_map.get(desktop_env.lower(), self._("Unknown"))
+
+    def _translate_protocol_name(self, protocol):
+        """Translate display protocol name."""
+        protocol_map = {
+            'x11': self._("X11"),
+            'wayland': self._("Wayland"),
+            'unknown': self._("Unknown")
+        }
+        return protocol_map.get(protocol.lower(), self._("Unknown"))
+
     def load_webapps(self):
         for child in self.listbox.get_children():
             self.listbox.remove(child)
@@ -304,11 +363,50 @@ class MainWindow(Gtk.ApplicationWindow):
         grid.attach(Gtk.Label(label=self._("Navigation Bar:")), 0, 4, 1, 1)
         grid.attach(switch_navbar, 1, 4, 2, 1)
 
+        # Incognito Switch
+        switch_incognito = Gtk.Switch()
+        switch_incognito.set_active(wa.is_incognito)
+        switch_incognito.set_halign(Gtk.Align.START)
+        grid.attach(Gtk.Label(label=self._("Incognito Mode:")), 0, 5, 1, 1)
+        grid.attach(switch_incognito, 1, 5, 2, 1)
+
         # Extra Parameters
         entry_extra_params = Gtk.Entry()
         entry_extra_params.set_text(wa.extra_params)
-        grid.attach(Gtk.Label(label=self._("Extra Parameters:")), 0, 5, 1, 1)
-        grid.attach(entry_extra_params, 1, 5, 2, 1)
+        grid.attach(Gtk.Label(label=self._("Extra Parameters:")), 0, 6, 1, 1)
+        
+        params_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
+        params_box.pack_start(entry_extra_params, True, True, 0)
+        
+        btn_help = Gtk.Button()
+        btn_help.set_image(Gtk.Image.new_from_icon_name("help-about", Gtk.IconSize.BUTTON))
+        btn_help.set_tooltip_text(self._("Common Parameters Help"))
+        def on_help_clicked(btn):
+            help_text = (
+                f"<b>--start-maximized</b>: {self._('Forces the WebApp to occupy the full screen at startup.')}\n\n"
+                f"<b>--disable-features=TabHoverCard</b>: {self._('Prevents floating bubbles when hovering over tabs (very useful in WebApp mode).')}\n\n"
+                f"<b>--force-dark-mode</b>: {self._('Forces the website to render in dark mode, even if not natively supported.')}\n\n"
+                f"<b>--user-agent=\"...\"</b>: {self._('Simulate a different browser or device.')}\n\n"
+                f"<b>--proxy-server=\"IP:PORT\"</b>: {self._('Use a specific proxy for this WebApp.')}\n\n"
+                f"<b>--window-size=WIDTH,HEIGHT</b>: {self._('Set a fixed window size.')}\n\n"
+                f"<b>--disable-notifications</b>: {self._('Disable all website notifications.')}\n\n"
+                f"<b>--shm-size=2gb</b>: {self._('Increase shared memory (useful for heavy apps in containers).')}"
+            )
+            help_dialog = Gtk.MessageDialog(
+                transient_for=dialog,
+                flags=0,
+                message_type=Gtk.MessageType.INFO,
+                buttons=Gtk.ButtonsType.OK,
+                text=self._("Browser Parameters Help")
+            )
+            help_dialog.set_markup(help_text)
+            help_dialog.run()
+            help_dialog.destroy()
+        
+        btn_help.connect("clicked", on_help_clicked)
+        params_box.pack_start(btn_help, False, False, 0)
+        
+        grid.attach(params_box, 1, 6, 2, 1)
         
         dialog.show_all()
         response = dialog.run()
@@ -320,6 +418,7 @@ class MainWindow(Gtk.ApplicationWindow):
             new_browser_id = combo_browser.get_active_id()
             new_show_navbar = switch_navbar.get_active()
             new_extra_params = entry_extra_params.get_text().strip()
+            new_is_incognito = switch_incognito.get_active()
             
             self.webapp_manager.update_webapp(
                 wa.id_name,
@@ -328,7 +427,8 @@ class MainWindow(Gtk.ApplicationWindow):
                 new_url=new_url,
                 new_browser_id=new_browser_id,
                 new_show_navbar=new_show_navbar,
-                new_extra_params=new_extra_params
+                new_extra_params=new_extra_params,
+                new_is_incognito=new_is_incognito
             )
             self.load_webapps()
         

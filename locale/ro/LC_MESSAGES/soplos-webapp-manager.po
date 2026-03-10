@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-04 15:32+0100\n"
+"POT-Creation-Date: 2026-03-10 16:10+0100\n"
 "PO-Revision-Date: 2026-03-04 13:00+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -54,11 +54,11 @@ msgstr "Adresă Web:"
 msgid "Select Icon"
 msgstr "Selectați pictograma"
 
-#: ui/main_window.py:259 ui/dialogs/add_webapp_dialog.py:103
+#: ui/main_window.py:259 ui/dialogs/add_webapp_dialog.py:143
 msgid "Select an icon"
 msgstr "Selectați o pictogramă"
 
-#: ui/main_window.py:268 ui/dialogs/add_webapp_dialog.py:113
+#: ui/main_window.py:268 ui/dialogs/add_webapp_dialog.py:153
 msgid "Images (PNG, SVG, JPG)"
 msgstr "Imagini (PNG, SVG, JPG)"
 
@@ -74,15 +74,66 @@ msgstr "Browser:"
 msgid "Navigation Bar:"
 msgstr "Bară de navigare:"
 
-#: ui/main_window.py:310 ui/dialogs/add_webapp_dialog.py:82
+#: ui/main_window.py:311 ui/dialogs/add_webapp_dialog.py:83
+msgid "Incognito Mode:"
+msgstr "Modo Incognito:"
+
+#: ui/main_window.py:317 ui/dialogs/add_webapp_dialog.py:89
 msgid "Extra Parameters:"
 msgstr "Parametri suplimentari:"
 
-#: ui/main_window.py:344
+#: ui/main_window.py:324 ui/dialogs/add_webapp_dialog.py:96
+msgid "Common Parameters Help"
+msgstr "Ajutor parametri comuni"
+
+#: ui/main_window.py:327 ui/dialogs/add_webapp_dialog.py:106
+msgid "Forces the WebApp to occupy the full screen at startup."
+msgstr "Forțează aplicația web să ocupe tot ecranul la pornire."
+
+#: ui/main_window.py:328 ui/dialogs/add_webapp_dialog.py:107
+msgid ""
+"Prevents floating bubbles when hovering over tabs (very useful in WebApp "
+"mode)."
+msgstr ""
+"Previne bulele plutitoare la trecerea mouse-ului peste file (foarte util în "
+"modul WebApp)."
+
+#: ui/main_window.py:329 ui/dialogs/add_webapp_dialog.py:108
+msgid ""
+"Forces the website to render in dark mode, even if not natively supported."
+msgstr ""
+"Forțează redarea site-ului web în modul întunecat, chiar dacă nu este "
+"acceptat nativ."
+
+#: ui/main_window.py:330 ui/dialogs/add_webapp_dialog.py:109
+msgid "Simulate a different browser or device."
+msgstr "Simulează un browser sau un dispozitiv diferit."
+
+#: ui/main_window.py:331 ui/dialogs/add_webapp_dialog.py:110
+msgid "Use a specific proxy for this WebApp."
+msgstr "Folosește un proxy specific pentru această aplicație web."
+
+#: ui/main_window.py:332 ui/dialogs/add_webapp_dialog.py:111
+msgid "Set a fixed window size."
+msgstr "Setează o dimensiune fixă a ferestrei."
+
+#: ui/main_window.py:333 ui/dialogs/add_webapp_dialog.py:112
+msgid "Disable all website notifications."
+msgstr "Dezactivează toate notificările site-ului web."
+
+#: ui/main_window.py:334 ui/dialogs/add_webapp_dialog.py:113
+msgid "Increase shared memory (useful for heavy apps in containers)."
+msgstr "Crește memoria partajată (util pentru aplicații grele în containere)."
+
+#: ui/main_window.py:341 ui/dialogs/add_webapp_dialog.py:121
+msgid "Browser Parameters Help"
+msgstr "Ajutor parametri browser"
+
+#: ui/main_window.py:385
 msgid "Are you sure you want to delete {}?"
 msgstr "Sigur doriți să ștergeți {}?"
 
-#: ui/main_window.py:346
+#: ui/main_window.py:387
 msgid "This will remove its .desktop file and the isolated browser profile."
 msgstr ""
 "Aceasta va elimina fișierul său .desktop și profilul de browser izolat."
@@ -95,7 +146,7 @@ msgstr "ex. YouTube"
 msgid "Category:"
 msgstr "Categorie:"
 
-#: ui/dialogs/add_webapp_dialog.py:81
+#: ui/dialogs/add_webapp_dialog.py:88
 msgid "e.g. --start-maximized"
 msgstr "de ex. --start-maximized"
 

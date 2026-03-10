@@ -76,13 +76,53 @@ class AddWebAppDialog(Gtk.Dialog):
         grid.attach(Gtk.Label(label=self._("Navigation Bar:")), 0, 5, 1, 1)
         grid.attach(self.switch_navbar, 1, 5, 2, 1)
 
+        # Incognito Switch
+        self.switch_incognito = Gtk.Switch()
+        self.switch_incognito.set_active(False)
+        self.switch_incognito.set_halign(Gtk.Align.START)
+        grid.attach(Gtk.Label(label=self._("Incognito Mode:")), 0, 6, 1, 1)
+        grid.attach(self.switch_incognito, 1, 6, 2, 1)
+
         # Extra Parameters
         self.entry_extra_params = Gtk.Entry()
         self.entry_extra_params.set_placeholder_text(self._("e.g. --start-maximized"))
-        grid.attach(Gtk.Label(label=self._("Extra Parameters:")), 0, 6, 1, 1)
-        grid.attach(self.entry_extra_params, 1, 6, 2, 1)
+        grid.attach(Gtk.Label(label=self._("Extra Parameters:")), 0, 7, 1, 1)
+        
+        params_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
+        params_box.pack_start(self.entry_extra_params, True, True, 0)
+        
+        btn_help = Gtk.Button()
+        btn_help.set_image(Gtk.Image.new_from_icon_name("help-about", Gtk.IconSize.BUTTON))
+        btn_help.set_tooltip_text(self._("Common Parameters Help"))
+        btn_help.connect("clicked", self.on_help_clicked)
+        params_box.pack_start(btn_help, False, False, 0)
+        
+        grid.attach(params_box, 1, 7, 2, 1)
         
         self.show_all()
+
+    def on_help_clicked(self, widget):
+        help_text = (
+            f"<b>--start-maximized</b>: {self._('Forces the WebApp to occupy the full screen at startup.')}\n\n"
+            f"<b>--disable-features=TabHoverCard</b>: {self._('Prevents floating bubbles when hovering over tabs (very useful in WebApp mode).')}\n\n"
+            f"<b>--force-dark-mode</b>: {self._('Forces the website to render in dark mode, even if not natively supported.')}\n\n"
+            f"<b>--user-agent=\"...\"</b>: {self._('Simulate a different browser or device.')}\n\n"
+            f"<b>--proxy-server=\"IP:PORT\"</b>: {self._('Use a specific proxy for this WebApp.')}\n\n"
+            f"<b>--window-size=WIDTH,HEIGHT</b>: {self._('Set a fixed window size.')}\n\n"
+            f"<b>--disable-notifications</b>: {self._('Disable all website notifications.')}\n\n"
+            f"<b>--shm-size=2gb</b>: {self._('Increase shared memory (useful for heavy apps in containers).')}"
+        )
+        
+        dialog = Gtk.MessageDialog(
+            transient_for=self,
+            flags=0,
+            message_type=Gtk.MessageType.INFO,
+            buttons=Gtk.ButtonsType.OK,
+            text=self._("Browser Parameters Help")
+        )
+        dialog.set_markup(help_text)
+        dialog.run()
+        dialog.destroy()
 
     def on_url_focus_out(self, widget, event):
         """Try to auto-download the favicon if the user leaves the URL input and there is no manual icon."""
@@ -137,5 +177,6 @@ class AddWebAppDialog(Gtk.Dialog):
             "category": self.combo_category.get_active_id(),
             "browser": self.combo_browser.get_active_id(),
             "show_navbar": self.switch_navbar.get_active(),
-            "extra_params": self.entry_extra_params.get_text().strip()
+            "extra_params": self.entry_extra_params.get_text().strip(),
+            "is_incognito": self.switch_incognito.get_active()
         }

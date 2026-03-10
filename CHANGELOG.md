@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
+## [1.0.0-1] - 2026-03-10
+
+### ✨ Standardized Soplos UI
+- **Official Soplos Footer**: Implemented an official status bar following the Soplos ecosystem standard.
+- **Environment Detection**: Added automatic identification of Desktop Environment (GNOME, Plasma, XFCE) and Protocol (Wayland, X11).
+- **Incognito Mode**: New support for private browsing sessions with fully isolated profiles.
+- **Extended Parameters Help**: Added a comprehensive guide for advanced browser flags and parameters.
+- **UI Alignment**: Consistent use of `dim-label` styling and standard margins (15, 15, 8, 8) for seamless transition between Soplos apps.
+
 ## [1.0.0] - 2026-03-04
 
 ### 🎉 Initial Release
