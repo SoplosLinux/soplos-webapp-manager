@@ -152,5 +152,46 @@ msgstr "Категория:"
 msgid "e.g. --start-maximized"
 msgstr "напр. --start-maximized"
 
-#~ msgid "Soplos WebApp Manager"
-#~ msgstr "Менеджер WebApp Soplos"
+#: main.py:81
+msgid "Shutting down Soplos WebApp Manager..."
+msgstr "Завершение работы менеджера веб-приложений Сорlos..."
+
+#: main.py:96
+msgid "Cleanup warning: {}"
+msgstr "Предупреждение об очистке: {}"
+
+#: ui/main_window.py:61
+msgid "Run WebApp"
+msgstr "Запустить веб-приложение"
+
+#: ui/main_window.py:78
+msgid "Delete WebApp"
+msgstr "Удалить веб-приложение"
+
+#: ui/main_window.py:189
+msgid "Ready - {desktop} on {protocol}"
+msgstr "Готово - {desktop} в {protocol}"
+
+#: ui/dialogs/add_webapp_dialog.py:56
+msgid "Network"
+msgstr "Интернет"
+
+#: ui/dialogs/add_webapp_dialog.py:57
+msgid "Game"
+msgstr "Игры"
+
+#: ui/dialogs/add_webapp_dialog.py:58
+msgid "Office"
+msgstr "Офис"
+
+#: ui/dialogs/add_webapp_dialog.py:59
+msgid "AudioVideo"
+msgstr "Аудио и видео"
+
+#: ui/dialogs/add_webapp_dialog.py:60
+msgid "Development"
+msgstr "Разработка"
+
+#: ui/dialogs/add_webapp_dialog.py:61
+msgid "Utility"
+msgstr "Утилиты"

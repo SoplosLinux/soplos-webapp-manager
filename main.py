@@ -78,7 +78,7 @@ class SoplosWebAppManagerApplication(Gtk.Application):
             self.window.show_all()
     
     def on_shutdown(self, app):
-        print("Shutting down Soplos WebApp Manager...")
+        print(_("Shutting down Soplos WebApp Manager..."))
         self._cleanup_garbage()
     
     def _cleanup_garbage(self):
@@ -93,7 +93,7 @@ class SoplosWebAppManagerApplication(Gtk.Application):
                     except Exception:
                         pass
         except Exception as e:
-            print(f"Cleanup warning: {e}")
+            print(_("Cleanup warning: {}").format(e))
 
 
 def main():

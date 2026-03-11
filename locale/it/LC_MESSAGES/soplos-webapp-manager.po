@@ -148,5 +148,46 @@ msgstr "Categoria:"
 msgid "e.g. --start-maximized"
 msgstr "es. --start-maximized"
 
-#~ msgid "Soplos WebApp Manager"
-#~ msgstr "Gestore WebApp Soplos"
+#: main.py:81
+msgid "Shutting down Soplos WebApp Manager..."
+msgstr "Chiusura del Gestore WebApp Soplos..."
+
+#: main.py:96
+msgid "Cleanup warning: {}"
+msgstr "Avviso di pulizia: {}"
+
+#: ui/main_window.py:61
+msgid "Run WebApp"
+msgstr "Esegui WebApp"
+
+#: ui/main_window.py:78
+msgid "Delete WebApp"
+msgstr "Elimina WebApp"
+
+#: ui/main_window.py:189
+msgid "Ready - {desktop} on {protocol}"
+msgstr "Pronto - {desktop} su {protocol}"
+
+#: ui/dialogs/add_webapp_dialog.py:56
+msgid "Network"
+msgstr "Internet"
+
+#: ui/dialogs/add_webapp_dialog.py:57
+msgid "Game"
+msgstr "Giochi"
+
+#: ui/dialogs/add_webapp_dialog.py:58
+msgid "Office"
+msgstr "Ufficio"
+
+#: ui/dialogs/add_webapp_dialog.py:59
+msgid "AudioVideo"
+msgstr "Audio e Video"
+
+#: ui/dialogs/add_webapp_dialog.py:60
+msgid "Development"
+msgstr "Sviluppo"
+
+#: ui/dialogs/add_webapp_dialog.py:61
+msgid "Utility"
+msgstr "Utilità"

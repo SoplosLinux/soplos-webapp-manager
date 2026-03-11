@@ -150,5 +150,46 @@ msgstr "Categorie:"
 msgid "e.g. --start-maximized"
 msgstr "de ex. --start-maximized"
 
-#~ msgid "Soplos WebApp Manager"
-#~ msgstr "Manager WebApp Soplos"
+#: main.py:81
+msgid "Shutting down Soplos WebApp Manager..."
+msgstr "Închiderea Managerului WebApp Soplos..."
+
+#: main.py:96
+msgid "Cleanup warning: {}"
+msgstr "Avertisment de curățare: {}"
+
+#: ui/main_window.py:61
+msgid "Run WebApp"
+msgstr "Lansare WebApp"
+
+#: ui/main_window.py:78
+msgid "Delete WebApp"
+msgstr "Șterge WebApp"
+
+#: ui/main_window.py:189
+msgid "Ready - {desktop} on {protocol}"
+msgstr "Gata - {desktop} pe {protocol}"
+
+#: ui/dialogs/add_webapp_dialog.py:56
+msgid "Network"
+msgstr "Internet"
+
+#: ui/dialogs/add_webapp_dialog.py:57
+msgid "Game"
+msgstr "Jocuri"
+
+#: ui/dialogs/add_webapp_dialog.py:58
+msgid "Office"
+msgstr "Birou"
+
+#: ui/dialogs/add_webapp_dialog.py:59
+msgid "AudioVideo"
+msgstr "Sunet și Video"
+
+#: ui/dialogs/add_webapp_dialog.py:60
+msgid "Development"
+msgstr "Dezvoltare"
+
+#: ui/dialogs/add_webapp_dialog.py:61
+msgid "Utility"
+msgstr "Utilități"

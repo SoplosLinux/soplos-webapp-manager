@@ -52,9 +52,16 @@ class AddWebAppDialog(Gtk.Dialog):
         
         # Category
         self.combo_category = Gtk.ComboBoxText()
-        categories = ["Network", "Game", "Office", "AudioVideo", "Development", "Utility"]
-        for cat in categories:
-            self.combo_category.append(cat, cat)
+        categories = [
+            ("Network", self._("Network")),
+            ("Game", self._("Game")),
+            ("Office", self._("Office")),
+            ("AudioVideo", self._("AudioVideo")),
+            ("Development", self._("Development")),
+            ("Utility", self._("Utility"))
+        ]
+        for cat_id, cat_name in categories:
+            self.combo_category.append(cat_id, cat_name)
         self.combo_category.set_active(0)
         grid.attach(Gtk.Label(label=self._("Category:")), 0, 3, 1, 1)
         grid.attach(self.combo_category, 1, 3, 2, 1)

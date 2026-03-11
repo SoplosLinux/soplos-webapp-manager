@@ -12,9 +12,10 @@ from ui.dialogs.add_webapp_dialog import AddWebAppDialog
 
 
 class WebAppRow(Gtk.ListBoxRow):
-    def __init__(self, webapp, on_edit_callback, on_delete_callback):
+    def __init__(self, webapp, on_edit_callback, on_delete_callback, _translate):
         super().__init__()
         self.webapp = webapp
+        self._ = _translate
         
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         box.set_margin_start(10)
@@ -59,6 +60,7 @@ class WebAppRow(Gtk.ListBoxRow):
         # Run button
         btn_run = Gtk.Button()
         btn_run.set_image(Gtk.Image.new_from_icon_name("media-playback-start", Gtk.IconSize.BUTTON))
+        btn_run.set_tooltip_text(self._("Run WebApp"))
         btn_run.connect("clicked", self.on_run_clicked)
         btn_run.set_valign(Gtk.Align.CENTER)
         box.pack_start(btn_run, False, False, 0)
@@ -66,6 +68,7 @@ class WebAppRow(Gtk.ListBoxRow):
         # Edit button
         btn_edit = Gtk.Button()
         btn_edit.set_image(Gtk.Image.new_from_icon_name("document-edit", Gtk.IconSize.BUTTON))
+        btn_edit.set_tooltip_text(self._("Edit WebApp"))
         btn_edit.set_valign(Gtk.Align.CENTER)
         btn_edit.connect("clicked", lambda w: on_edit_callback(self.webapp))
         box.pack_start(btn_edit, False, False, 0)
@@ -73,6 +76,7 @@ class WebAppRow(Gtk.ListBoxRow):
         # Delete button
         btn_delete = Gtk.Button()
         btn_delete.set_image(Gtk.Image.new_from_icon_name("user-trash", Gtk.IconSize.BUTTON))
+        btn_delete.set_tooltip_text(self._("Delete WebApp"))
         btn_delete.get_style_context().add_class('destructive-action')
         btn_delete.set_valign(Gtk.Align.CENTER)
         btn_delete.connect("clicked", lambda w: on_delete_callback(self.webapp))
@@ -197,13 +201,13 @@ class MainWindow(Gtk.ApplicationWindow):
         status_box.pack_start(self.status_label, False, False, 0)
         
         # Right side: Version info
-        version_text = f"{APP_NAME} v{APP_VERSION}"
+        version_text = f"v{APP_VERSION}"
         version_label = Gtk.Label(label=version_text)
         version_label.set_halign(Gtk.Align.END)
         version_label.get_style_context().add_class('dim-label')
         status_box.pack_end(version_label, False, False, 0)
         
-        main_vbox.pack_start(status_box, False, False, 0)
+        main_vbox.pack_end(status_box, False, False, 0)
 
     def _translate_desktop_name(self, desktop_env):
         """Translate desktop environment name."""
@@ -238,7 +242,7 @@ class MainWindow(Gtk.ApplicationWindow):
             self.stack.set_visible_child_name("empty")
         else:
             for wa in webapps:
-                row = WebAppRow(wa, self.edit_webapp, self.confirm_and_delete_webapp)
+                row = WebAppRow(wa, self.edit_webapp, self.confirm_and_delete_webapp, self._)
                 self.listbox.add(row)
             self.listbox.show_all()
             self.stack.set_visible_child_name("list")
