@@ -6,7 +6,7 @@ from pathlib import Path
 
 from core.browser_manager import BrowserManager, Browser
 from core.webapp_manager import WebAppManager, WebApp
-from config.constants import APP_NAME, APP_VERSION
+from config.constants import APP_ID, APP_NAME, APP_VERSION
 
 from ui.dialogs.add_webapp_dialog import AddWebAppDialog
 
@@ -105,6 +105,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.setup_ui()
         self.setup_shortcuts()
         self.load_webapps()
+        self.connect("key-press-event", self._on_key_press)
         
     def setup_shortcuts(self):
         accel_group = Gtk.AccelGroup()
@@ -455,6 +456,88 @@ class MainWindow(Gtk.ApplicationWindow):
         if response == Gtk.ResponseType.YES:
             self.webapp_manager.delete_webapp(wa.id_name)
             self.load_webapps()
+
+    def _show_about(self, *args):
+        dialog = Gtk.AboutDialog()
+        dialog.set_transient_for(self)
+        dialog.set_modal(True)
+        dialog.set_program_name(APP_NAME)
+        dialog.set_version(APP_VERSION)
+        dialog.set_comments(self._("Web application manager for Soplos Linux."))
+        dialog.set_website("https://soplos.org")
+        dialog.set_website_label("soplos.org")
+        dialog.set_authors(["Sergi Perich <info@soploslinux.com>"])
+        dialog.set_license_type(Gtk.License.GPL_3_0)
+        icon_path = Path(__file__).parent.parent / 'assets' / 'icons' / '64x64' / 'org.soplos.webappmanager.png'
+        if icon_path.exists():
+            dialog.set_logo(GdkPixbuf.Pixbuf.new_from_file_at_scale(str(icon_path), 48, 48, True))
+        _about_css = Gtk.CssProvider()
+        _about_css.load_from_data(b"""
+            dialog, messagedialog {
+                background-color: #2b2b2b;
+                color: #ffffff;
+            }
+            dialog .background, messagedialog .background {
+                background-color: #2b2b2b;
+                color: #ffffff;
+            }
+            dialog > box, messagedialog > box {
+                background-color: #2b2b2b;
+            }
+            dialog label, messagedialog label {
+                color: #ffffff;
+            }
+            dialog button, messagedialog button {
+                background-image: none;
+                background-color: #333333;
+                color: #ffffff;
+                border: 1px solid #3c3c3c;
+                border-radius: 4px;
+                padding: 6px 14px;
+                min-height: 0;
+                box-shadow: none;
+            }
+            dialog button:hover, messagedialog button:hover {
+                background-color: #444444;
+                border-color: #ff8800;
+            }
+            dialog stackswitcher button {
+                border-radius: 100px;
+                background-color: #2b2b2b;
+                background-image: none;
+                border: 1px solid #3c3c3c;
+                font-weight: normal;
+                padding: 4px 16px;
+                min-height: 0;
+                box-shadow: none;
+                color: #ffffff;
+            }
+            dialog stackswitcher button:hover {
+                background-color: #444444;
+                border-color: #ff8800;
+            }
+            dialog stackswitcher button:checked {
+                background-color: #444444;
+                color: #ffffff;
+            }
+            dialog scrolledwindow,
+            dialog scrolledwindow viewport {
+                background-color: #2b2b2b;
+                border-radius: 0;
+            }
+        """)
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), _about_css,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER
+        )
+        dialog.run()
+        dialog.destroy()
+
+    def _on_key_press(self, widget, event):
+        if event.keyval == Gdk.KEY_F1:
+            self._show_about()
+            return True
+        return False
 
     def on_remove_clicked(self, widget):
         row = self.listbox.get_selected_row()

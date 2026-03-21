@@ -52,5 +52,9 @@ soplos-webapp-manager/
 └── utils/            # Shared utilities (Favicon Fetcher)
 ```
 
+## 🆕 New in version 1.0.0-2 (March 21, 2026)
+
+- **About dialog**: Press F1 or use the GNOME application menu to open the About dialog.
+
 ## License
 This project is licensed under the GPL-3.0 License - see the `debian/copyright` file for details.

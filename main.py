@@ -66,6 +66,10 @@ class SoplosWebAppManagerApplication(Gtk.Application):
         print(_("Starting Soplos WebApp Manager..."))
         self.browser_manager = BrowserManager()
         self.webapp_manager = WebAppManager(self.browser_manager)
+
+        about_action = Gio.SimpleAction.new('about', None)
+        about_action.connect('activate', lambda *_: self.window._show_about() if self.window else None)
+        self.add_action(about_action)
     
     def on_activate(self, app):
         if self.window: # Changed from self.main_window
