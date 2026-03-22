@@ -52,9 +52,30 @@ soplos-webapp-manager/
 └── utils/            # Shared utilities (Favicon Fetcher)
 ```
 
-## 🆕 New in version 1.0.0-2 (March 21, 2026)
+## 🆕 New in version 1.0.0-3 (March 22, 2026)
+
+- **UI colors**: Fixed background color inconsistency — window and list now use the correct Soplos dark theme color (#2b2b2b).
+
+## New in version 1.0.0-2 (March 21, 2026)
 
 - **About dialog**: Press F1 or use the GNOME application menu to open the About dialog.
+
+## New in version 1.0.0-1 (March 10, 2026)
+
+- **Official Soplos Footer**: Implemented a standard status bar following the Soplos ecosystem standard.
+- **Environment Detection**: Added automatic identification of Desktop Environment (GNOME, Plasma, XFCE) and Protocol (Wayland, X11).
+- **Incognito Mode**: New support for private browsing sessions with fully isolated profiles.
+- **Extended Parameters Help**: Added a comprehensive guide for advanced browser flags and parameters.
+- **UI Alignment**: Consistent use of `dim-label` styling and standard margins for seamless transition between Soplos apps.
+
+## New in version 1.0.0 (March 4, 2026)
+
+- **Full WebApp Editing**: Users can edit Name, URL, Icon, Browser, and Navigation Bar settings for existing WebApps.
+- **Extra Browser Parameters**: Support for custom browser flags (e.g., `--start-maximized`, `--kiosk`) at creation and editing.
+- **Improved Wayland Compatibility**: Enhanced icon mapping and window association for KDE Plasma 6 and other modern environments.
+- **Independent Firefox Instances**: Optimized Firefox SSB behavior with truly isolated processes and dedicated icons.
+- **Smart Favicons**: Fallback mechanism to download high-quality website icons via Google Favicons API.
+- **Full Internationalization (i18n)**: Translation ready for the 8 default languages in Soplos Linux.
 
 ## License
 This project is licensed under the GPL-3.0 License - see the `debian/copyright` file for details.

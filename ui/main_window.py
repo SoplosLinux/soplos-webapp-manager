@@ -100,7 +100,22 @@ class MainWindow(Gtk.ApplicationWindow):
         
         self.set_default_size(600, 450)
         self.set_position(Gtk.WindowPosition.CENTER)
-        
+
+        _css = Gtk.CssProvider()
+        _css.load_from_data(b"""
+            window { background-color: #2b2b2b; color: #ffffff; }
+            list { background-color: #2b2b2b; color: #ffffff; }
+            list row { background-color: #2b2b2b; color: #ffffff; border-bottom: 1px solid #3c3c3c; }
+            list row:hover { background-color: #333333; }
+            scrolledwindow, scrolledwindow viewport { background-color: #2b2b2b; }
+            label { color: #ffffff; }
+            label.dim-label { color: #888888; }
+        """)
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), _css,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
         self.setup_headerbar()
         self.setup_ui()
         self.setup_shortcuts()
