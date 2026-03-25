@@ -78,4 +78,4 @@ soplos-webapp-manager/
 - **Full Internationalization (i18n)**: Translation ready for the 8 default languages in Soplos Linux.
 
 ## License
-This project is licensed under the GPL-3.0 License - see the `debian/copyright` file for details.
+This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
